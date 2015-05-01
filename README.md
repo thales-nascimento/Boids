@@ -1,2 +1,2 @@
 # Boids
-implementação do algoritmo do boids - computação gráfica Cefet-MG
+implementação do algoritmo do boids - computação gráfica CEFET-MG
