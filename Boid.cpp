@@ -41,4 +41,9 @@ void Boid::mudar_aceleracao(Vetor a){
 Vetor Boid::get_coordenadas(){
 	return coordenadas;
 }
-
+Vetor Boid::get_velocidade(){
+	return velocidade;
+}
+Vetor Boid::get_aceleracao(){
+	return aceleracao;
+}

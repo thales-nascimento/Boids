@@ -25,6 +25,8 @@ public:
 	Boid(Vetor posicao);
 	
 	Vetor get_coordenadas();
+	Vetor get_aceleracao();
+	Vetor get_velocidade();
 };
 
 #endif

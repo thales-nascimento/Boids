@@ -12,6 +12,11 @@
 #include <cstdlib>
 using namespace std;
 
+//constantes das forças atuantes nos boids
+#define K_COESAO 16
+#define K_REPULSAO 2
+#define K_ALINHAMENTO 1
+#define K_LIDERANCA 1
 
 class Boid_container{
 private:
@@ -20,9 +25,6 @@ private:
 	
 	//list<Boid*> esfera_visao(Boid& atual);
 	
-	void coesao();
-	void repulsao();
-	void alinhamento();
 	void lideranca();
 	
 public:

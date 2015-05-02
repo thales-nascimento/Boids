@@ -51,10 +51,26 @@ void Boid_container::remove_boid(){
 
 //atualização
 void Boid_container::refresh_boids(){
+	for(list<Boid>::iterator boid_atual = boids.begin(); boid_atual != boids.end(); boid_atual++){
+		list<Boid*> visiveis = esfera_visao(*boid_atual);
+		if(visiveis.size() == 0)continue;
+		Vetor aceleracao;
+		for(list<Boid*>::iterator boid_atuante = visiveis.begin(); boid_atuante != visiveis.end(); boid_atuante++){
+			Vetor distancia = (*boid_atuante)->get_coordenadas() - (*boid_atual).get_coordenadas();
+			aceleracao += (K_COESAO/(distancia.norma()*distancia.norma())*distancia);
+			aceleracao -= (K_REPULSAO/distancia.norma()*distancia.norma()*distancia.norma()*distancia);
+			aceleracao += (K_ALINHAMENTO/distancia.norma()*distancia.norma()*(*boid_atuante)->get_velocidade());
+		}
+		(*boid_atual).mudar_aceleracao(aceleracao);
+	}
+	
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		(*atual).refresh();
 	}
 }
+
+
+
 
 list<Boid*> Boid_container::esfera_visao(Boid& atual){
 	
@@ -236,15 +252,12 @@ list<Boid*> Boid_container::esfera_visao(Boid& atual){
 	
 }
 
-void Boid_container::coesao(){
-	
-}
 
 
 //output
 void Boid_container::print_boids(){
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
-		cout<<(*atual).get_coordenadas().x<<'	'<<(*atual).get_coordenadas().y<<'	'<<(*atual).get_coordenadas().z<<endl;
+		cout<<(*atual).get_coordenadas().x<<"	"<<(*atual).get_coordenadas().y<<"	"<<(*atual).get_coordenadas().z<<"	|	"<<(*atual).get_aceleracao().norma()<<"	"<<(*atual).get_velocidade().norma()<<endl;
 	}
 }
 
