@@ -1,8 +1,8 @@
 CC = g++
 CFLAGS = -std=c++11
 
-all: Boid.o Boid_container.o Vetor.o main.cpp
-	$(CC) $(CFLAGS) -lGL -lglut -lm -o boids Boid.o Boid_container.o Vetor.o main.cpp
+all: Boid.o Boid_container.o Vetor.o Earth.o main.cpp
+	$(CC) $(CFLAGS) -lGL -lglut -lm -o boids Boid.o Boid_container.o Vetor.o Earth.o main.cpp
 
 Vetor.o:
 	$(CC) $(CFLAGS) -c -o Vetor.o Vetor.cpp
@@ -12,6 +12,11 @@ Boid.o:
 	
 Boid_container.o:
 	$(CC) $(CFLAGS) -c -o Boid_container.o Boid_container.cpp
+	
+Earth.o:
+	$(CC) $(CFLAGS) -c -o Earth.o Earth.c
+
+	
 	
 clear:
 	rm *.o boids

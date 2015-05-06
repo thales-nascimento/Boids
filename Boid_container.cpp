@@ -28,16 +28,17 @@ Boid& Boid_container::operator[](unsigned int indice){
 
 
 //adicionar e remover boids
-void Boid_container::add_boid(){
-	double xrand = rand()%(ROOM_MAX_X - ROOM_MIN_X) + ROOM_MIN_X;
-	double yrand = rand()%(ROOM_MAX_Y - ROOM_MIN_Y) + ROOM_MIN_Y;
-	double zrand = rand()%(ROOM_MAX_Z - ROOM_MIN_Z) + ROOM_MIN_Z;
-	
-	boids.emplace(boids.end(), xrand, yrand, zrand);	//criando um boid numa posicao aleatória dentro da room
-}
 
 void Boid_container::add_boid(double x, double y, double z){
 	boids.emplace(boids.end(), x, y, z);
+}
+
+void Boid_container::add_boid(int min_dist, int max_dist){
+	Vetor aleatorio(rand(),rand(),rand());
+	aleatorio.normalizar();
+	int tamanho = rand()%(max_dist-min_dist)+min_dist;
+	aleatorio *=tamanho;
+	add_boid(aleatorio.x, aleatorio.y,aleatorio.z);
 }
 
 void Boid_container::remove_boid(){
@@ -50,18 +51,43 @@ void Boid_container::remove_boid(){
 
 
 //atualização
+Vetor Boid_container::altura_pid(Vetor altura){
+	static double erro = 0;
+	static double acumulador = 0;
+	static double altura_anterior = 0;
+	static double d_altura = 0;
+	erro = altura.norma() - H_SETPOINT;
+	acumulador += erro*KI;
+	d_altura = altura.norma()-altura_anterior;
+	altura_anterior = altura.norma();
+	
+	Vetor aceleracao = (KP*erro +KD*d_altura + acumulador)*altura;	//se estiver mais alto que o setpoint, aceleracao é positiva
+	return aceleracao;
+}
+
 void Boid_container::refresh_boids(){
 	for(list<Boid>::iterator boid_atual = boids.begin(); boid_atual != boids.end(); boid_atual++){
-		list<Boid*> visiveis = esfera_visao(*boid_atual);
-		if(visiveis.size() == 0)continue;
+		list<Boid*> visiveis;
+		esfera_visao(*boid_atual,1, visiveis);
 		Vetor aceleracao;
+		Vetor distancia = (*boid_atual).get_coordenadas();
+		aceleracao -= altura_pid((*boid_atual).get_coordenadas());
+		
+		if(visiveis.empty()){
+			esfera_visao(*boid_atual,16, visiveis);
+		} else if(visiveis.size() == 1){
+			esfera_visao(*boid_atual,4, visiveis);
+		}
+		
+			
 		for(list<Boid*>::iterator boid_atuante = visiveis.begin(); boid_atuante != visiveis.end(); boid_atuante++){
 			Vetor distancia = (*boid_atuante)->get_coordenadas() - (*boid_atual).get_coordenadas();
-			aceleracao += (K_COESAO/(distancia.norma()*distancia.norma())*distancia);
-			aceleracao -= (K_REPULSAO/distancia.norma()*distancia.norma()*distancia.norma()*distancia);
-			aceleracao += (K_ALINHAMENTO/distancia.norma()*distancia.norma()*(*boid_atuante)->get_velocidade());
+			aceleracao += ((K_COESAO/(distancia.norma()/distancia.norma()))*distancia);
+			aceleracao -= ((K_REPULSAO/distancia.norma()/distancia.norma()/distancia.norma())*distancia);
+			aceleracao += ((K_ALINHAMENTO/distancia.norma()/distancia.norma())*(*boid_atuante)->get_velocidade());
 		}
 		(*boid_atual).mudar_aceleracao(aceleracao);
+		
 	}
 	
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
@@ -72,20 +98,19 @@ void Boid_container::refresh_boids(){
 
 
 
-list<Boid*> Boid_container::esfera_visao(Boid& atual){
+list<Boid*> Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> &cubo){
 	
-	double x0 = atual.get_coordenadas().x - atual.CAMPO_DE_VISAO;
-	double x1 = atual.get_coordenadas().x + atual.CAMPO_DE_VISAO;
-	double y0 = atual.get_coordenadas().y - atual.CAMPO_DE_VISAO;
-	double y1 = atual.get_coordenadas().y + atual.CAMPO_DE_VISAO;
-	double z0 = atual.get_coordenadas().z - atual.CAMPO_DE_VISAO;
-	double z1 = atual.get_coordenadas().z + atual.CAMPO_DE_VISAO;
+	double x0 = atual.get_coordenadas().x - Boid::CAMPO_DE_VISAO*multiplicador;
+	double x1 = atual.get_coordenadas().x + Boid::CAMPO_DE_VISAO*multiplicador;
+	double y0 = atual.get_coordenadas().y - Boid::CAMPO_DE_VISAO*multiplicador;
+	double y1 = atual.get_coordenadas().y + Boid::CAMPO_DE_VISAO*multiplicador;
+	double z0 = atual.get_coordenadas().z - Boid::CAMPO_DE_VISAO*multiplicador;
+	double z1 = atual.get_coordenadas().z + Boid::CAMPO_DE_VISAO*multiplicador;
 	
 	list<Boid>::iterator iterador;
 	list<Boid*>::iterator sub_iterador;
 	int inicio, fim, meio;
 	
-	list <Boid*> cubo;
 	
 	//selecionar um "cubo de visao"
 	
@@ -241,7 +266,7 @@ list<Boid*> Boid_container::esfera_visao(Boid& atual){
 	sub_iterador = cubo.begin();
 	while(sub_iterador != cubo.end()){
 		Vetor distancia = (*sub_iterador)->get_coordenadas() - atual.get_coordenadas();
-		if(distancia.norma() > atual.CAMPO_DE_VISAO){
+		if(distancia.norma() > Boid::CAMPO_DE_VISAO*multiplicador){
 			sub_iterador = cubo.erase(sub_iterador);
 		} else {
 			sub_iterador++;
@@ -258,6 +283,17 @@ list<Boid*> Boid_container::esfera_visao(Boid& atual){
 void Boid_container::print_boids(){
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		cout<<(*atual).get_coordenadas().x<<"	"<<(*atual).get_coordenadas().y<<"	"<<(*atual).get_coordenadas().z<<"	|	"<<(*atual).get_aceleracao().norma()<<"	"<<(*atual).get_velocidade().norma()<<endl;
+	}
+}
+
+void Boid_container::draw_boids(){
+	Vetor local;
+	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
+		local = (*atual).get_coordenadas();
+		glPushMatrix();
+		glTranslated(local.x, local.y, local.z);
+		(*atual).draw();
+		glPopMatrix();
 	}
 }
 
