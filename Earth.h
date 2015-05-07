@@ -12,6 +12,7 @@
 
 void earth_init();
 void earth_draw();
+void earth_debug();
 
 
 #endif

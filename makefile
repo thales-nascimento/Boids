@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -std=c++11
 
 all: Boid.o Boid_container.o Vetor.o Earth.o main.cpp
-	$(CC) $(CFLAGS) -lGL -lglut -lm -o boids Boid.o Boid_container.o Vetor.o Earth.o main.cpp
+	$(CC) $(CFLAGS) -lGL -lglut -lm -lGLU -o boids Boid.o Boid_container.o Vetor.o Earth.o main.cpp
 
 Vetor.o:
 	$(CC) $(CFLAGS) -c -o Vetor.o Vetor.cpp

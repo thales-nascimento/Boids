@@ -6,6 +6,7 @@ Boid::Boid(double x, double y, double z){
 	coordenadas[2] = z;
 	Vetor a(rand(),rand(),rand());
 	mudar_aceleracao(a);
+	
 }
 
 Boid::Boid(Vetor posicao){
@@ -13,7 +14,9 @@ Boid::Boid(Vetor posicao){
 }
 
 
-Boid::Boid(){}
+Boid::Boid(){
+	
+}
 
 
 void Boid::acelerar(){
@@ -63,33 +66,61 @@ void Boid::compile_vertexes(){
 			
 			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-SCALER);
 			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-SCALER);
-			glVertex3f(0,0,2*SCALER);
+			glVertex3f(0,0,4*SCALER);
 			
 			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-SCALER);
 			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-SCALER);
-			glVertex3f(0,0,2*SCALER);
+			glVertex3f(0,0,4*SCALER);
 			
 			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-SCALER);
 			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-SCALER);
-			glVertex3f(0,0,2*SCALER);
+			glVertex3f(0,0,4*SCALER);
 		
 		glEnd();
 	glEndList();
 }
 
 void Boid::draw(){
-	double rotx,roty,rotz;
-	if(velocidade.norma() != 0){
-		rotx = acos(produto_escalar(velocidade, {1,0,0})/velocidade.norma());
-		roty = acos(produto_escalar(velocidade, {0,1,0})/velocidade.norma());
-		rotz = acos(produto_escalar(velocidade, {0,0,1})/velocidade.norma());
 	
+	Vetor rotation_axis = produto_vetorial(velocidade, {0,0,1});
+
+	double rotation_angle;
+	if(rotation_axis.norma() == .0){
+		if(velocidade.z < 0){
+			rotation_angle = PI;
+			rotation_axis.y = 1;
+		}
+	} else if(velocidade.norma() != .0){
+		rotation_angle = asin(rotation_axis.norma()/velocidade.norma());
+		if(velocidade.z < .0){
+			rotation_axis.x = -rotation_axis.x;
+			rotation_axis.y = -rotation_axis.y;
+			rotation_angle += PI;
+		}
 	} else {
-		rotx = rotz = roty = 0;
+		rotation_angle = .0;
 	}
+	glPushMatrix();
+		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
+		glRotated(rotation_angle*180/PI,-rotation_axis.x,rotation_axis.y,rotation_axis.z);
+		
+		glCallList(Boid::boid);
+	glPopMatrix();
+}
+
+void Boid::debug_velocity(){
+	Vetor v = velocidade;
+	v.normalizar();
+	v*=5;
+	glPushMatrix();
+		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
+		glBegin(GL_LINES);
+			glVertex3d(0,0,0);
+			glVertex3d(v.x, v.y, v.y);
+		glEnd();
+	glPopMatrix();
+}
+
+void Boid::debug_acceleration(){
 	
-	glRotated(rotx,1,0,0); 
-	glRotated(roty,0,1,0); 
-	glRotated(rotz,0,0,1); 
-	glCallList(Boid::boid);
 }

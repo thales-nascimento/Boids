@@ -31,4 +31,16 @@ void earth_draw(){
 	glCallList(esfera);
 }
 
-
+void earth_debug(){
+	glBegin(GL_LINES);
+		glColor3ub(0xff,0,0);
+		glVertex3i(SPHERE_RADIUS*10,0,0);
+		glVertex3i(-SPHERE_RADIUS*10,0,0);
+		glColor3ub(0,0,0xff);
+		glVertex3i(0,SPHERE_RADIUS*10,0);
+		glVertex3i(0,-SPHERE_RADIUS*10,0);
+		glColor3ub(0,0xff,0);
+		glVertex3i(0,0,SPHERE_RADIUS*10);
+		glVertex3i(0,0,-SPHERE_RADIUS*10);
+	glEnd();
+}

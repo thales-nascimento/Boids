@@ -1,9 +1,10 @@
 #include <GL/freeglut.h>
 #include <cmath>
+#include <GL/glu.h>
 #include "Boid_container.hpp"
 #include "Earth.h"
 
-int move_speed = 4;
+int frameskip = 1;
 int pause = false;
 
 double theta=0, phi=0;
@@ -15,10 +16,12 @@ void draw_scene(){
 	glPushMatrix();
 		glRotated(-theta, 1,0,0);
 		glRotated(-phi,0,1,0);
-		
+				
 		earth_draw();
+		earth_debug();
+		
 		container.draw_boids();
-	
+		
 	glPopMatrix();
 	
 	glutSwapBuffers();
@@ -49,9 +52,9 @@ void active_mouse(int x, int y){
 }
 void wheel_mouse(int button, int status, int x, int y){
 	switch(button){
-		case 3:	glTranslatef(0,0,move_speed);
+		case 3:	glTranslatef(0,0,4);
 		break;
-		case 4:	glTranslatef(0,0,-move_speed);
+		case 4:	glTranslatef(0,0,-4);
 		break;
 	}
 	glutPostRedisplay();
@@ -61,17 +64,17 @@ void keyboard(unsigned char key,int x, int y){
 	switch(key){
 		case 'p': pause = !pause;
 		break;
-		case 'w': glTranslatef(0,-move_speed,0);
+		case 'w': glTranslatef(0,-4,0);
 		break;
-		case 's': glTranslatef(0,move_speed,0);
+		case 's': glTranslatef(0,4,0);
 		break;
-		case 'a': glTranslatef(move_speed,0,0);
+		case 'a': glTranslatef(4,0,0);
 		break;
-		case 'd': glTranslatef(-move_speed,0,0);
+		case 'd': glTranslatef(-4,0,0);
 		break;
-		case '+':move_speed += move_speed>32?0:2;
+		case '+':frameskip += frameskip>15?0:1;
 		break;
-		case '-':move_speed -= move_speed>0?0:2;
+		case '-':frameskip -= frameskip>2?0:1;
 	}
 	glutPostRedisplay();
 }
@@ -79,17 +82,21 @@ void keyboard(unsigned char key,int x, int y){
 
 
 void boids_main_loop(int value){
+	static int skipper = 0;
 	if(pause){
 		glutTimerFunc(15, boids_main_loop, value);
 		return;
 	}
-	glutTimerFunc(15, boids_main_loop, !value);
-	if(value){
+	if(frameskip-skipper > 0){
+		skipper++;
 		container.refresh_boids();
-	} else {
+		glutTimerFunc(1, boids_main_loop, value);
+	}else{
+		glutTimerFunc(15, boids_main_loop, !value);
 		glutPostRedisplay();
+		skipper = 0;
 	}
-	
+
 	
 }
 

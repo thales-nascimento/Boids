@@ -27,11 +27,10 @@ private:
 	list<Boid*> esfera_visao(Boid& atual,float multiplicador, list<Boid*> &visiveis);
 	
 	void lideranca();
-	static Vetor altura_pid(Vetor altura);
+	static Vetor altura_pd(Vetor altura);
 	
-	static constexpr double KP = .0001;
-	static constexpr double KD = .00003;
-	static constexpr double KI = .0;
+	static constexpr double KP = .01;
+	static constexpr double KD = .003;
 	static constexpr int H_SETPOINT = SPHERE_RADIUS+3;
 	
 public:
