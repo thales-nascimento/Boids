@@ -5,9 +5,9 @@
 #include <GL/gl.h>
 #include <cmath>
 #include <cstdlib>
-
-#define PI 3.14159265358979
-#define SCALER 0.5
+#include "PI.h"
+#define SCALER 0.25
+#define K_GRAVIDADE .01
 
 class Boid {
 private:
@@ -17,12 +17,14 @@ private:
 	
 	void acelerar();
 	void mover();
+	void cair();
 	
 public:
+	int vizinhos_vistos=0;
 
 	constexpr static double VELOCIDADE_MAX = .1;
 	constexpr static double ACELERACAO_MAX = .01;
-	constexpr static double CAMPO_DE_VISAO = 2;
+	constexpr static double CAMPO_DE_VISAO = 4;
 
 	void mudar_aceleracao(Vetor a);
 	
@@ -40,6 +42,9 @@ public:
 	static GLuint boid;	//variavel que armazena o identificador da lista de vértices do boid
 	static void compile_vertexes();
 	void draw();
+	
+	void debug_velocity();
+	void debug_acceleration();
 };
 
 #endif

@@ -14,23 +14,18 @@ using namespace std;
 
 //constantes das forças atuantes nos boids
 #define K_COESAO 1
-#define K_REPULSAO 5
+#define K_REPULSAO 1
 #define K_ALINHAMENTO 2
 #define K_LIDERANCA 1
-
 
 class Boid_container{
 private:
 	list<Boid> boids;
 	Boid lider;
 	
-	list<Boid*> esfera_visao(Boid& atual,float multiplicador, list<Boid*> &visiveis);
+	void esfera_visao(Boid& atual,float multiplicador, list<Boid*> &visiveis);
 	
 	void lideranca();
-	static Vetor altura_pd(Vetor altura);
-	
-	static constexpr double KP = .01;
-	static constexpr double KD = .003;
 	static constexpr int H_SETPOINT = SPHERE_RADIUS+3;
 	
 public:

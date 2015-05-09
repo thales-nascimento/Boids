@@ -29,11 +29,14 @@ void Boid::acelerar(){
 void Boid::mover(){
 	coordenadas += velocidade;
 }
-
+void Boid::cair(){
+	coordenadas -= K_GRAVIDADE/coordenadas.norma()*coordenadas; 
+}
 
 void Boid::refresh(){
 	acelerar();
 	mover();
+	cair();
 }
 void Boid::mudar_aceleracao(Vetor a){
 	if(a.norma() > ACELERACAO_MAX){
