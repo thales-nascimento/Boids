@@ -63,29 +63,29 @@ void Boid::compile_vertexes(){
 	glNewList(boid, GL_COMPILE);
 		glColor3ub(0x79,0xff,0x79);
 		glBegin(GL_TRIANGLES);
-			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-SCALER);
-			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-SCALER);
-			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-SCALER);
+			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
+			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-2*SCALER);
+			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-2*SCALER);
 			
-			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-SCALER);
-			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-SCALER);
-			glVertex3f(0,0,4*SCALER);
+			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
+			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-2*SCALER);
+			glVertex3f(0,0,3*SCALER);
 			
-			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-SCALER);
-			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-SCALER);
-			glVertex3f(0,0,4*SCALER);
+			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-2*SCALER);
+			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-2*SCALER);
+			glVertex3f(0,0,3*SCALER);
 			
-			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-SCALER);
-			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-SCALER);
-			glVertex3f(0,0,4*SCALER);
+			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-2*SCALER);
+			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
+			glVertex3f(0,0,3*SCALER);
 		
 		glEnd();
 	glEndList();
 }
 
 void Boid::draw(){
-	
 	Vetor rotation_axis = produto_vetorial(velocidade, {0,0,1});
+	
 
 	double rotation_angle;
 	if(rotation_axis.norma() == .0){

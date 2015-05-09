@@ -81,9 +81,8 @@ void Boid_container::refresh_boids(){
 		for(list<Boid*>::iterator boid_atuante = visiveis.begin(); boid_atuante != visiveis.end(); boid_atuante++){
 			Vetor distancia = (*boid_atuante)->get_coordenadas() - (*boid_atual).get_coordenadas();
 			double norma_2 = distancia.norma()*distancia.norma();
-			double norma_3 = norma_2*distancia.norma();
 			coesao += (K_COESAO)*distancia;
-			alinhamento += (K_ALINHAMENTO*norma_2)*(*boid_atuante)->get_velocidade();
+			alinhamento += (K_ALINHAMENTO*distancia.norma())*(*boid_atuante)->get_velocidade();
 			repulsao -= (K_REPULSAO/norma_2)*distancia;
 		}
 		
