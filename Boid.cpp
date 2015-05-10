@@ -29,14 +29,11 @@ void Boid::acelerar(){
 void Boid::mover(){
 	coordenadas += velocidade;
 }
-void Boid::cair(){
-	coordenadas -= K_GRAVIDADE/coordenadas.norma()*coordenadas; 
-}
+
 
 void Boid::refresh(){
 	acelerar();
 	mover();
-	cair();
 }
 void Boid::mudar_aceleracao(Vetor a){
 	if(a.norma() > ACELERACAO_MAX){
@@ -86,8 +83,8 @@ void Boid::compile_vertexes(){
 void Boid::draw(){
 	Vetor rotation_axis = produto_vetorial(velocidade, {0,0,1});
 	
-
 	double rotation_angle;
+	
 	if(rotation_axis.norma() == .0){
 		if(velocidade.z < 0){
 			rotation_angle = PI;
@@ -95,6 +92,7 @@ void Boid::draw(){
 		}
 	} else if(velocidade.norma() != .0){
 		rotation_angle = asin(rotation_axis.norma()/velocidade.norma());
+		
 		if(velocidade.z < .0){
 			rotation_axis.x = -rotation_axis.x;
 			rotation_axis.y = -rotation_axis.y;
@@ -103,6 +101,8 @@ void Boid::draw(){
 	} else {
 		rotation_angle = .0;
 	}
+	
+	
 	glPushMatrix();
 		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
 		glRotated(rotation_angle*180/PI,-rotation_axis.x,rotation_axis.y,rotation_axis.z);

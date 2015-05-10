@@ -2,8 +2,7 @@
 #define __BOID_CONTAINER_HPP__
 
 #include "Boid.hpp"
-#include "Vetor.hpp"
-#include "Earth.h"
+#include "esfera.h"
 
 #include <iostream>
 #include <GL/freeglut.h>
@@ -18,7 +17,10 @@ using namespace std;
 #define K_ALINHAMENTO 7.0
 #define K_LIDERANCA 1
 
+class Earth;
+
 class Boid_container{
+friend class Earth;
 private:
 	list<Boid> boids;
 	Boid lider;
@@ -26,13 +28,10 @@ private:
 	void esfera_visao(Boid& atual,float multiplicador, list<Boid*> &visiveis);
 	
 	void lideranca();
-	static constexpr int H_SETPOINT = SPHERE_RADIUS+3;
+	static constexpr int H_SETPOINT = RAIO_TERRESTRE+3;
 	
-public:
-
-	Boid_container(Boid leader);	
 	
-	Boid& operator[](unsigned int indice);
+public:	
 	
 	void add_boid(double x, double y, double z);
 	void add_boid(int min_dis, int max_dist);

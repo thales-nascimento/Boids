@@ -13,18 +13,7 @@ bool sort_z(Boid *a, Boid *b){
 	return a->get_coordenadas().z < b->get_coordenadas().z;
 }
 
-//construtor
-Boid_container::Boid_container(Boid leader){
-	lider = leader;
-}
 
-
-//acesso ao campo
-Boid& Boid_container::operator[](unsigned int indice){
-	list<Boid>::iterator i = boids.begin();
-	advance(i, indice);
-	return *i;
-}
 
 
 //adicionar e remover boids
@@ -80,18 +69,22 @@ void Boid_container::refresh_boids(){
 		Vetor repulsao, alinhamento, coesao;
 		for(list<Boid*>::iterator boid_atuante = visiveis.begin(); boid_atuante != visiveis.end(); boid_atuante++){
 			Vetor distancia = (*boid_atuante)->get_coordenadas() - (*boid_atual).get_coordenadas();
-			double norma_2 = distancia.norma()*distancia.norma();
-			coesao += (K_COESAO)*distancia;
-			alinhamento += (K_ALINHAMENTO*distancia.norma())*(*boid_atuante)->get_velocidade();
-			repulsao -= (K_REPULSAO/norma_2)*distancia;
+			double norma = distancia.norma();
+			coesao += distancia;
+			repulsao -= (1.0/norma/norma)*distancia;
+			alinhamento += norma*(*boid_atuante)->get_velocidade();
 		}
 		
+		repulsao *= K_REPULSAO;
 		aceleracao += repulsao;
 		if(aceleracao.norma() > K_REPULSAO){
 			(*boid_atual).mudar_aceleracao(aceleracao);
 			continue;
 		}
+		
+		coesao *= K_COESAO;
 		aceleracao += coesao;
+		alinhamento *= K_ALINHAMENTO;
 		aceleracao += alinhamento;
 		(*boid_atual).mudar_aceleracao(aceleracao);
 	}

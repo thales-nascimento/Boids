@@ -14,7 +14,7 @@ Boid_container.o:
 	$(CC) $(CFLAGS) -c -o Boid_container.o Boid_container.cpp
 	
 Earth.o:
-	$(CC) $(CFLAGS) -c -o Earth.o Earth.c
+	$(CC) $(CFLAGS) -c -o Earth.o Earth.cpp
 
 	
 	

@@ -7,9 +7,11 @@
 #include <cstdlib>
 #include "PI.h"
 #define SCALER 0.25
-#define K_GRAVIDADE .01
+
+class Earth;
 
 class Boid {
+friend class Earth;
 private:
 	Vetor coordenadas;
 	Vetor velocidade;
@@ -17,14 +19,13 @@ private:
 	
 	void acelerar();
 	void mover();
-	void cair();
 	
 public:
 	int vizinhos_vistos=0;
 
 	constexpr static double VELOCIDADE_MAX = .1;
 	constexpr static double ACELERACAO_MAX = .005;
-	constexpr static double CAMPO_DE_VISAO = 4;
+	constexpr static double CAMPO_DE_VISAO = 3;
 
 	void mudar_aceleracao(Vetor a);
 	

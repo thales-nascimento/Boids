@@ -1,0 +1,8 @@
+#ifndef __ESFERA_H_INCLUDED_
+#define __ESFERA_H_INCLUDED_
+
+#define RAIO_TERRESTRE 128
+#define LATITUDES 15
+#define LONGITUDES 15
+
+#endif
