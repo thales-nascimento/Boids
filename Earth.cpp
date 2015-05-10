@@ -4,7 +4,7 @@
 
 void Earth::gravidade(){
 	for(list<Boid>::iterator i = boid_container.boids.begin(); i != boid_container.boids.end(); i++){
-		(*i).coordenadas -= K_GRAVIDADE/(*i).coordenadas.norma()*(*i).coordenadas; 
+		(*i).velocidade -= K_GRAVIDADE/(*i).coordenadas.norma()*(*i).coordenadas; 
 	}
 }
 

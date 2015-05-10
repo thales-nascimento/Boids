@@ -20,7 +20,7 @@ void draw_scene(){
 	double cosphi = cos(phi);
 	double abscosphi = cosphi<0?-cosphi:cosphi;
 	glPushMatrix();
-		gluLookAt(observer_x,observer_y,observer_z,observer_x+abscosphi*cos(theta), observer_y+sin(phi), observer_z+abscosphi*sin(theta),0,1,0);
+		gluLookAt(observer_x,observer_y,observer_z,observer_x+abscosphi*cos(theta), observer_y+sin(phi), observer_z+abscosphi*sin(theta),cos(phi+PI/2)*cos(theta),cos(phi),cos(phi+PI/2)*sin(theta));
 		
 		mundo.earth_draw();
 		mundo.earth_debug();

@@ -50,11 +50,9 @@ void Boid_container::refresh_boids(){
 		Vetor versor_altura = altura;
 		versor_altura.normalizar();
 		
-		if(H_SETPOINT-altura.norma() > 0){
-			aceleracao += (sqrt(H_SETPOINT-altura.norma())*versor_altura);
-		}else {
-			aceleracao -= (sqrt(-H_SETPOINT+altura.norma())*versor_altura);
-		}
+		if(H_SETPOINT-altura.norma() > 0)aceleracao += (H_SETPOINT-altura.norma())*(H_SETPOINT-altura.norma())*versor_altura;
+		else aceleracao += (H_SETPOINT-altura.norma())*versor_altura;
+		
 		
 		switch((*boid_atual).vizinhos_vistos){
 			case 0: esfera_visao(*boid_atual,5, visiveis);
@@ -64,7 +62,6 @@ void Boid_container::refresh_boids(){
 			default: esfera_visao(*boid_atual,1,visiveis);
 		}
 		(*boid_atual).vizinhos_vistos = visiveis.size();
-		
 		
 		Vetor repulsao, alinhamento, coesao;
 		for(list<Boid*>::iterator boid_atuante = visiveis.begin(); boid_atuante != visiveis.end(); boid_atuante++){
