@@ -16,14 +16,39 @@ bool sort_z(Boid *a, Boid *b){
 	return a->get_coordenadas().z < b->get_coordenadas().z;
 }
 
+bool sort_id(Boid a, Boid b){
+	return a.id < b.id;
+}
 
-
+//acesso aos boids
+Boid* Boid_container::procurar_boid(unsigned int id){
+	boids.sort(sort_id);
+	list<Boid>::iterator i= boids.begin();
+	int inicio = 0;
+	int posicao=0;
+	int meio;
+	int fim = boids.size();
+	while(fim >= inicio){
+		meio = (inicio+fim)/2;
+		advance(i, meio-posicao);
+		posicao=meio;
+		if((*i).id < id){
+			inicio = meio +1;
+		} else if((*i).id > id){
+			fim = meio -1;
+		} else {
+			break;
+		} 
+	}
+	return &(*i);
+}
 
 //adicionar e remover boids
 
 void Boid_container::add_boid(double x, double y, double z){
 	Boid b(x,y,z);
 	boids.push_back(b);
+	Boid::idcont++;
 }
 
 void Boid_container::add_boid(int min_dist, int max_dist){
@@ -49,6 +74,7 @@ void Boid_container::remove_boid(){
 void Boid_container::refresh_boids(){
 	for(list<Boid>::iterator boid_atual = boids.begin(); boid_atual != boids.end(); boid_atual++){
 		list<Boid*> visiveis;
+		
 		Vetor aceleracao;
 		Vetor altura = (*boid_atual).get_coordenadas();
 		Vetor versor_altura = altura;
@@ -93,11 +119,6 @@ void Boid_container::refresh_boids(){
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		(*atual).refresh();
 	}
-}
-
-
-void decide(){
-	
 }
 
 void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> &cubo){

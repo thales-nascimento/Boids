@@ -34,6 +34,8 @@ public:
 	
 	void refresh();
 	
+	double get_rotation();
+	
 	Earth();
 
 };

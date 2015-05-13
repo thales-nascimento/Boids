@@ -58,8 +58,8 @@ void Earth::earth_draw(){
 	glColor3ub(0xff,0xff,0xff);
 	
 	glPushMatrix();
-		glRotated(23.5,0,0,1);
-		glRotated(angulo_rotacao*180/PI,0,1,0);
+		//glRotated(23.5,0,0,1);
+		//glRotated(angulo_rotacao*180/PI,0,1,0);
 		glCallList(esfera);
 		boid_container.draw_boids();
 	glPopMatrix();
@@ -91,6 +91,10 @@ void Earth::earth_debug(){
 		glVertex3i(0,0,RAIO_TERRESTRE*2048);
 		glVertex3i(0,0,-RAIO_TERRESTRE*2048);
 	glEnd();
+}
+
+double Earth::get_rotation(){
+	return angulo_rotacao;
 }
 
 Earth::Earth(){

@@ -3,24 +3,25 @@
 double Boid::VELOCIDADE_MAX = .1;
 double Boid::ACELERACAO_MAX = .005;
 double Boid::CAMPO_DE_VISAO = 3;
+unsigned int Boid::idcont=0;
 
-Boid::Boid(double x, double y, double z){
+Boid::Boid(double x, double y, double z): id(idcont){
 	coordenadas[0] = x;
 	coordenadas[1] = y;
 	coordenadas[2] = z;
 	Vetor a(rand(),rand(),rand());
 	mudar_aceleracao(a);
-	vizinhos_vistos=0;
+	Boid();
 	
 }
 
-Boid::Boid(Vetor posicao){
+Boid::Boid(Vetor posicao): id(idcont){
 	coordenadas = posicao;
-	vizinhos_vistos=0;
+	Boid();
 }
 
 
-Boid::Boid(){
+Boid::Boid(): id(idcont){
 	vizinhos_vistos=0;
 }
 

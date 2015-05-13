@@ -12,15 +12,11 @@ class Earth;
 
 class Boid {
 friend class Earth;
-private:
-	Vetor coordenadas;
-	Vetor velocidade;
-	Vetor aceleracao;
-	
-	void acelerar();
-	void mover();
-	
+
 public:
+	const unsigned int id;
+	static unsigned int idcont;
+
 	int vizinhos_vistos;
 
 	static double VELOCIDADE_MAX;
@@ -37,8 +33,7 @@ public:
 	
 	Vetor get_coordenadas();
 	Vetor get_aceleracao();
-	Vetor get_velocidade();
-	
+	Vetor get_velocidade();	
 	
 	static GLuint boid;	//variavel que armazena o identificador da lista de vértices do boid
 	static void compile_vertexes();
@@ -46,6 +41,15 @@ public:
 	
 	void debug_velocity();
 	void debug_acceleration();
+	
+private:
+	Vetor coordenadas;
+	Vetor velocidade;
+	Vetor aceleracao;
+	
+	void acelerar();
+	void mover();
+	
 };
 
 #endif
