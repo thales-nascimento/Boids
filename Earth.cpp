@@ -8,11 +8,25 @@ void Earth::gravidade(){
 	}
 }
 
+void Earth::rotacionar(){	
+	for(list<Boid>::iterator i = boid_container.boids.begin(); i!= boid_container.boids.end(); i++){
+		double x = (*i).coordenadas.x;
+		double y = (*i).coordenadas.y;
+		double z = (*i).coordenadas.z;
+		x = sin(angulo_rotacao)*(x*0.3987490689264 + y*0.9170600743845) + cos(angulo_rotacao)*z;
+		y = x*0.9170600743845 - y*0.3987490689264;
+		z = cos(angulo_rotacao)*(x*0.3987490689264 + y*0.9170600743845) - sin(angulo_rotacao)*z;
+		(*i).coordenadas.x = x;
+		(*i).coordenadas.y = y;
+		(*i).coordenadas.z = z;
+	}
+}
+
 void Earth::refresh(){
+	angulo_rotacao += 1.0/30.0/PERIODO_ROTACAO;
 	gravidade();
 	boid_container.refresh_boids();
 }
-
 
 GLuint Earth::esfera=0;
 void Earth::compile_vertexes(){
@@ -20,7 +34,6 @@ void Earth::compile_vertexes(){
 	
 	glNewList(esfera, GL_COMPILE);
 		glBegin(GL_QUADS);
-			
 			double phi=0, theta=0;
 			for(int i=0;i<LATITUDES;i++){
 				for(int j=0;j<LONGITUDES-1;j++){
@@ -40,13 +53,13 @@ void Earth::compile_vertexes(){
 }
 
 void Earth::earth_draw(){
-	angulo_rotacao += 1.0/30.0/PERIODO_ROTACAO;
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINES );	
 	glColor3ub(0xff,0xff,0xff);
 	
 	glPushMatrix();
-		glRotated(angulo_rotacao*180/PI,0,0.917060074363,0.398749068974);	//inclinacao 23.5 graus do eixo y em relacao ao z
+		glRotated(23.5,0,0,1);
+		glRotated(angulo_rotacao*180/PI,0,1,0);
 		glCallList(esfera);
 		boid_container.draw_boids();
 	glPopMatrix();
@@ -80,5 +93,8 @@ void Earth::earth_debug(){
 	glEnd();
 }
 
-
+Earth::Earth(){
+	angulo_rotacao=0;
+	angulo_translacao_solar=0;
+}
 

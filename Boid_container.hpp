@@ -13,23 +13,23 @@ using namespace std;
 
 //constantes das forças atuantes nos boids
 #define K_COESAO 1.0
-#define K_REPULSAO 1.0
-#define K_ALINHAMENTO 7.0
+#define K_REPULSAO 1.5
+#define K_ALINHAMENTO 4.0
 #define K_LIDERANCA 1
 
 class Earth;
 
 class Boid_container{
 friend class Earth;
+friend class Observer;
 private:
 	list<Boid> boids;
 	Boid lider;
 	
 	void esfera_visao(Boid& atual,float multiplicador, list<Boid*> &visiveis);
 	
-	void lideranca();
-	static constexpr int H_SETPOINT = RAIO_TERRESTRE+3;
-	
+	void lideranca();	
+	static int H_SETPOINT;
 	
 public:	
 	

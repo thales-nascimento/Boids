@@ -1,21 +1,27 @@
 #include "Boid.hpp"
 
+double Boid::VELOCIDADE_MAX = .1;
+double Boid::ACELERACAO_MAX = .005;
+double Boid::CAMPO_DE_VISAO = 3;
+
 Boid::Boid(double x, double y, double z){
 	coordenadas[0] = x;
 	coordenadas[1] = y;
 	coordenadas[2] = z;
 	Vetor a(rand(),rand(),rand());
 	mudar_aceleracao(a);
+	vizinhos_vistos=0;
 	
 }
 
 Boid::Boid(Vetor posicao){
 	coordenadas = posicao;
+	vizinhos_vistos=0;
 }
 
 
 Boid::Boid(){
-	
+	vizinhos_vistos=0;
 }
 
 
@@ -81,7 +87,8 @@ void Boid::compile_vertexes(){
 }
 
 void Boid::draw(){
-	Vetor rotation_axis = produto_vetorial(velocidade, {0,0,1});
+	const static Vetor z_axis(0,0,1);
+	Vetor rotation_axis = produto_vetorial(velocidade, z_axis);
 	
 	double rotation_angle;
 	

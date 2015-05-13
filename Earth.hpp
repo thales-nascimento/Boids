@@ -1,6 +1,7 @@
 #ifndef __EARTH_HPP_INCLUDED__
 #define __EARTH_HPP_INCLUDED__
 
+#define INCLINACAO 
 #define K_GRAVIDADE .001
 #define PERIODO_ROTACAO 48.0
 #define PERIODO_TRANSLACAO 17520
@@ -15,10 +16,11 @@
 
 class Earth{
 private:
-	double angulo_rotacao=0;
+	double angulo_rotacao;
 	void gravidade();
+	void rotacionar();
 	
-	double angulo_translacao_solar=0;
+	double angulo_translacao_solar;
 	
 public:
 
@@ -31,6 +33,8 @@ public:
 	void sun_draw();
 	
 	void refresh();
+	
+	Earth();
 
 };
 

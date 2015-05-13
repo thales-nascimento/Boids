@@ -21,11 +21,11 @@ private:
 	void mover();
 	
 public:
-	int vizinhos_vistos=0;
+	int vizinhos_vistos;
 
-	constexpr static double VELOCIDADE_MAX = .1;
-	constexpr static double ACELERACAO_MAX = .005;
-	constexpr static double CAMPO_DE_VISAO = 3;
+	static double VELOCIDADE_MAX;
+	static double ACELERACAO_MAX;
+	static double CAMPO_DE_VISAO;
 
 	void mudar_aceleracao(Vetor a);
 	

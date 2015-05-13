@@ -1,5 +1,8 @@
 #include "Boid_container.hpp"
 
+
+int Boid_container::H_SETPOINT = RAIO_TERRESTRE+3;
+
 //sort functions
 bool sort_x(Boid a, Boid b){
 	return a.get_coordenadas().x < b.get_coordenadas().x;
@@ -19,7 +22,8 @@ bool sort_z(Boid *a, Boid *b){
 //adicionar e remover boids
 
 void Boid_container::add_boid(double x, double y, double z){
-	boids.emplace(boids.end(), x, y, z);
+	Boid b(x,y,z);
+	boids.push_back(b);
 }
 
 void Boid_container::add_boid(int min_dist, int max_dist){
@@ -55,7 +59,7 @@ void Boid_container::refresh_boids(){
 		
 		
 		switch((*boid_atual).vizinhos_vistos){
-			case 0: esfera_visao(*boid_atual,5, visiveis);
+			case 0: esfera_visao(*boid_atual,7, visiveis);
 			break;
 			case 1: esfera_visao(*boid_atual,2.5, visiveis);
 			break;
@@ -74,7 +78,7 @@ void Boid_container::refresh_boids(){
 		
 		repulsao *= K_REPULSAO;
 		aceleracao += repulsao;
-		if(aceleracao.norma() > K_REPULSAO){
+		if(aceleracao.norma() > 1){
 			(*boid_atual).mudar_aceleracao(aceleracao);
 			continue;
 		}
