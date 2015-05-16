@@ -30,23 +30,23 @@ void Observer::look(){
 			direcao.normalizar();
 			posicao += distancia*direcao;
 			Vetor velocidade = observado->get_velocidade();
-			gluLookAt(posicao.x,posicao.y,posicao.z,
-					0,0,0,
-					velocidade.x, velocidade.y,velocidade.z );
+			double angulo_rotacao = earth->get_rotation();
+			
+			gluLookAt(posicao.x,posicao.y,posicao.z,  0,0,0,  velocidade.x, velocidade.y,velocidade.z );
 		}	
 	}
 }
 
-char move_left=0, move_right=0, move_front=0, move_back=0;
+char move_left=0, move_right=0, move_front=0, move_back=0, move_top=0,move_bottom=0;
 void Observer::move(){
 	if(move_front){
-		posicao.z+=OBSERVER_SPEED*sin(theta);
-		posicao.x+=OBSERVER_SPEED*cos(theta);
+		posicao.z+=OBSERVER_SPEED*sin(theta)*cos(phi);
+		posicao.x+=OBSERVER_SPEED*cos(theta)*cos(phi);
 		posicao.y+=OBSERVER_SPEED*sin(phi);
 		move_front--;
 	} else if(move_back){
-		posicao.z-=OBSERVER_SPEED*sin(theta);
-		posicao.x-=OBSERVER_SPEED*cos(theta);
+		posicao.z-=OBSERVER_SPEED*sin(theta)*cos(phi);
+		posicao.x-=OBSERVER_SPEED*cos(theta)*cos(phi);
 		posicao.y-=OBSERVER_SPEED*sin(phi);
 		move_back--;
 	}
@@ -58,6 +58,17 @@ void Observer::move(){
 		posicao.x-=OBSERVER_SPEED*sin(theta);
 		posicao.z+=OBSERVER_SPEED*cos(theta);
 		move_right--;
+	}
+	if(move_top){
+		posicao.z-=OBSERVER_SPEED*sin(theta)*sin(phi);
+		posicao.x-=OBSERVER_SPEED*cos(theta)*sin(phi);
+		posicao.y+=OBSERVER_SPEED*cos(phi);
+		move_top--;
+	} else if(move_bottom){
+		posicao.z+=OBSERVER_SPEED*sin(theta)*sin(phi);
+		posicao.x+=OBSERVER_SPEED*cos(theta)*sin(phi);
+		posicao.y-=OBSERVER_SPEED*cos(phi);
+		move_bottom--;
 	}
 	
 }
@@ -73,6 +84,10 @@ void keyboard_free_camera(unsigned char key,int x, int y){
 		case 'a': move_left = 3;
 		break;
 		case 'd': move_right = 3;
+		break;
+		case 'i': move_top = 3;
+		break;
+		case 'k': move_bottom = 3;
 		break;
 		case '1': Observer::change_mode(FREE_CAMERA);
 		break;

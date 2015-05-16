@@ -12,9 +12,9 @@
 using namespace std;
 
 //constantes das forças atuantes nos boids
-#define K_COESAO 1.0
+#define K_COESAO 1.5
 #define K_REPULSAO 1.5
-#define K_ALINHAMENTO 10.0
+#define K_ALINHAMENTO 7.0
 #define K_LIDERANCA 1
 
 class Earth;

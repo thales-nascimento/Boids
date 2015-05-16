@@ -142,7 +142,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 	//obter o menor x maior ou igual a x0
 	int borda_menor=0, borda_maior=0;
 	inicio = 0, posicao=0;
-	fim = boids.size();
+	fim = boids.size() -1;
 	iterador = boids.begin();
 	while(fim >= inicio){
 		meio = (inicio + fim)/2;
@@ -156,7 +156,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(iterador != boids.end() && (*iterador).get_coordenadas().x < x0){
+	if(iterador != (--boids.end()) && (*iterador).get_coordenadas().x < x0){
 		borda_menor++;
 	}
 	
@@ -197,7 +197,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 	sub_iterador = cubo.begin();
 	posicao = 0;
 	inicio = 0;
-	fim = cubo.size();
+	fim = cubo.size() -1;
 	while(fim >= inicio){
 		meio = (inicio + fim)/2;
 		if(meio < cubo.size()){
@@ -214,13 +214,13 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(sub_iterador != cubo.end() && (*sub_iterador)->get_coordenadas().y < y0){
+	if(sub_iterador != (--cubo.end()) && (*sub_iterador)->get_coordenadas().y < y0){
 		borda_menor++;
 		posicao++;
 	}
 	//obter maior y menor ou igual a y1
 	inicio = 0;
-	fim = cubo.size();
+	fim = cubo.size() -1;
 	while(fim >= inicio){
 		meio = (inicio + fim)/2;
 		if(meio < cubo.size()){
@@ -259,7 +259,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 	sub_iterador = cubo.begin();
 	posicao = 0;
 	inicio = 0;
-	fim = cubo.size();
+	fim = cubo.size() -1;
 	while(fim >= inicio){
 		meio = (inicio + fim)/2;
 		if(meio < cubo.size()){
@@ -276,13 +276,13 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(sub_iterador != cubo.end() && (*sub_iterador)->get_coordenadas().z < z0){
+	if(sub_iterador != (--cubo.end()) && (*sub_iterador)->get_coordenadas().z < z0){
 		borda_menor++;
 		posicao++;
 	}
 	//obter maior z menor ou igual a z1
 	inicio = 0;
-	fim = cubo.size();
+	fim = cubo.size() -1;
 	while(fim >= inicio){
 		meio = (inicio + fim)/2;
 		if(meio < cubo.size()){

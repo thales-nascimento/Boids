@@ -9,17 +9,7 @@ void Earth::gravidade(){
 }
 
 void Earth::rotacionar(){	
-	for(list<Boid>::iterator i = boid_container.boids.begin(); i!= boid_container.boids.end(); i++){
-		double x = (*i).coordenadas.x;
-		double y = (*i).coordenadas.y;
-		double z = (*i).coordenadas.z;
-		x = sin(angulo_rotacao)*(x*0.3987490689264 + y*0.9170600743845) + cos(angulo_rotacao)*z;
-		y = x*0.9170600743845 - y*0.3987490689264;
-		z = cos(angulo_rotacao)*(x*0.3987490689264 + y*0.9170600743845) - sin(angulo_rotacao)*z;
-		(*i).coordenadas.x = x;
-		(*i).coordenadas.y = y;
-		(*i).coordenadas.z = z;
-	}
+	
 }
 
 void Earth::refresh(){
@@ -58,8 +48,8 @@ void Earth::earth_draw(){
 	glColor3ub(0xff,0xff,0xff);
 	
 	glPushMatrix();
-		//glRotated(23.5,0,0,1);
-		//glRotated(angulo_rotacao*180/PI,0,1,0);
+		glRotated(23.5,0,0,1);
+		glRotated(angulo_rotacao*180/PI,0,1,0);
 		glCallList(esfera);
 		boid_container.draw_boids();
 	glPopMatrix();

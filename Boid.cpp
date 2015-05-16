@@ -2,7 +2,7 @@
 
 double Boid::VELOCIDADE_MAX = .1;
 double Boid::ACELERACAO_MAX = .005;
-double Boid::CAMPO_DE_VISAO = 3;
+double Boid::CAMPO_DE_VISAO = 2;
 unsigned int Boid::idcont=0;
 
 Boid::Boid(double x, double y, double z): id(idcont){
