@@ -72,7 +72,7 @@ int main(int argc, char**argv){
 	Boid::compile_vertexes();
 	Earth::compile_vertexes();
 	
-	for(int i=0;i<200;i++){
+	for(int i=0;i<500;i++){
 		mundo.boid_container.add_boid(RAIO_TERRESTRE+1,RAIO_TERRESTRE+8);
 	}
 	
