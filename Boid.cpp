@@ -42,6 +42,7 @@ void Boid::refresh(){
 	acelerar();
 	mover();
 }
+
 void Boid::mudar_aceleracao(Vetor a){
 	if(a.norma() > ACELERACAO_MAX){
 		a.normalizar();

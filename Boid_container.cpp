@@ -92,6 +92,7 @@ void Boid_container::refresh_boids(){
 			default: esfera_visao(*boid_atual,1,visiveis);
 		}
 		(*boid_atual).vizinhos_vistos = visiveis.size();
+
 		
 		Vetor repulsao, alinhamento, coesao;
 		for(list<Boid*>::iterator boid_atuante = visiveis.begin(); boid_atuante != visiveis.end(); boid_atuante++){
@@ -156,7 +157,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(iterador != (--boids.end()) && (*iterador).get_coordenadas().x < x0){
+	if(iterador != boids.end() && (*iterador).get_coordenadas().x < x0){
 		borda_menor++;
 	}
 	
@@ -214,9 +215,8 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(sub_iterador != (--cubo.end()) && (*sub_iterador)->get_coordenadas().y < y0){
+	if(sub_iterador != cubo.end() && (*sub_iterador)->get_coordenadas().y < y0){
 		borda_menor++;
-		posicao++;
 	}
 	//obter maior y menor ou igual a y1
 	inicio = 0;
@@ -237,13 +237,13 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(sub_iterador != cubo.begin() && (*sub_iterador)->get_coordenadas().y > y1){
-		borda_maior--;
+	if(sub_iterador != cubo.begin() && (*sub_iterador)->get_coordenadas().y <= y1){
+		borda_maior++;
 	}
 	
 	//eliminar os boids fora do intervalo [y0, y1]
-	if(borda_maior < cubo.size()){
-		advance(sub_iterador, borda_maior+1 -posicao);
+	if(borda_maior < cubo.size() -1){
+		advance(sub_iterador, borda_maior -posicao);
 		cubo.erase(sub_iterador, cubo.end());
 	}
 	if(borda_menor > 0){
@@ -251,6 +251,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 		advance(sub_iterador, borda_menor);
 		cubo.erase(cubo.begin(),sub_iterador);
 	}
+	
 	//selecionar no eixo z
 	//sort
 	cubo.sort(sort_z);
@@ -276,9 +277,8 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(sub_iterador != (--cubo.end()) && (*sub_iterador)->get_coordenadas().z < z0){
+	if(sub_iterador != cubo.end() && (*sub_iterador)->get_coordenadas().z < z0){
 		borda_menor++;
-		posicao++;
 	}
 	//obter maior z menor ou igual a z1
 	inicio = 0;
@@ -299,13 +299,13 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			break;
 		}
 	}
-	if(sub_iterador != cubo.begin() && (*sub_iterador)->get_coordenadas().z > z1){
-		borda_maior--;
+	if(sub_iterador != cubo.begin() && (*sub_iterador)->get_coordenadas().z <= z1){
+		borda_maior++;
 	}
 	
 	//eliminar os boids fora do intervalo [z0, z1]
-	if(borda_maior < cubo.size()){
-		advance(sub_iterador, borda_maior+1 -posicao);
+	if(borda_maior < cubo.size() -1){
+		advance(sub_iterador, borda_maior -posicao);
 		cubo.erase(sub_iterador, cubo.end());
 	}
 	if(borda_menor > 0){
@@ -315,6 +315,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 	}
 	
 	//filtrar brutamente para circulo
+	
 	sub_iterador = cubo.begin();
 	Vetor distancia;
 	while(sub_iterador != cubo.end()){
@@ -325,6 +326,7 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 			sub_iterador++;
 		}
 	}
+	
 }
 
 
