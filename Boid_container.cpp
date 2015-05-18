@@ -3,18 +3,6 @@
 
 int Boid_container::H_SETPOINT = RAIO_TERRESTRE+3;
 
-//sort functions
-bool sort_x(Boid a, Boid b){
-	return a.get_coordenadas().x < b.get_coordenadas().x;
-}
-
-bool sort_y(Boid *a, Boid *b){
-	return a->get_coordenadas().y < b->get_coordenadas().y;
-}
-
-bool sort_z(Boid *a, Boid *b){
-	return a->get_coordenadas().z < b->get_coordenadas().z;
-}
 
 bool sort_id(Boid a, Boid b){
 	return a.id < b.id;
@@ -81,7 +69,6 @@ void Boid_container::refresh_boids(){
 		versor_altura.normalizar();
 		
 		if(H_SETPOINT-altura.norma() > 0)aceleracao += (H_SETPOINT-altura.norma())*(H_SETPOINT-altura.norma())*versor_altura;
-		else aceleracao += (H_SETPOINT-altura.norma())*versor_altura;
 		
 		
 		switch((*boid_atual).vizinhos_vistos){

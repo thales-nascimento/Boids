@@ -1,7 +1,7 @@
 CC = g++
 
 all: Boid.o Boid_container.o Vetor.o Earth.o Observer.o main.cpp
-	$(CC) -lGL -lglut -lm -lGLU -o boids Boid.o Boid_container.o Vetor.o Earth.o Observer.o main.cpp
+	$(CC) -o boids Boid.o Boid_container.o Vetor.o Earth.o Observer.o main.cpp -lGL -lglut -lm -lGLU
 
 Vetor.o:
 	$(CC) -c -o Vetor.o Vetor.cpp
