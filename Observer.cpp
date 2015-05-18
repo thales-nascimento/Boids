@@ -33,7 +33,15 @@ void Observer::look(){
 			double angulo_rotacao = earth->get_rotation();
 			
 			gluLookAt(posicao.x,posicao.y,posicao.z,  0,0,0,  velocidade.x, velocidade.y,velocidade.z );
-		}	
+		}
+		case GEO_ESTACIONARIA:{
+			double raio_visao = RAIO_TERRESTRE+10;
+			double rotacao = earth->get_rotation();
+			gluLookAt(raio_visao,0, 0,
+					0,1,0,
+					0,0,0 );
+			break;
+		}
 	}
 }
 
@@ -93,6 +101,8 @@ void keyboard_free_camera(unsigned char key,int x, int y){
 		break;
 		case '2': Observer::change_mode(THIRD_UP);
 		break;
+		case '3': Observer::change_mode(GEO_ESTACIONARIA);
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -121,6 +131,8 @@ void keyboard_third_person(unsigned char key,int x, int y){
 		case '1': Observer::change_mode(FREE_CAMERA);
 		break;
 		case '2': Observer::change_mode(THIRD_UP);
+		break;
+		case '3': Observer::change_mode(GEO_ESTACIONARIA);
 		break;
 	}
 	glutPostRedisplay();
@@ -164,14 +176,18 @@ void Observer::change_mode(int mode){
 	switch(modo_observacao){
 		case FREE_CAMERA:{
 			glutMotionFunc(active_mouse);
-			glutPassiveMotionFunc(passive_mouse);
 			glutMouseFunc(wheel_mouse);
 			glutKeyboardFunc(keyboard_free_camera);
 			break;
 		}
 		case THIRD_UP:{			
 			glutMotionFunc(active_mouse_unused);
-			glutPassiveMotionFunc(passive_mouse);
+			glutMouseFunc(wheel_mouse);
+			glutKeyboardFunc(keyboard_third_person);
+			break;
+		}
+		case GEO_ESTACIONARIA:{
+			glutMotionFunc(active_mouse_unused);
 			glutMouseFunc(wheel_mouse);
 			glutKeyboardFunc(keyboard_third_person);
 			break;
@@ -180,6 +196,7 @@ void Observer::change_mode(int mode){
 }
 
 void Observer::init(Earth *e){
+	glutPassiveMotionFunc(passive_mouse);
 	change_mode(FREE_CAMERA);
 	earth = e;
 	

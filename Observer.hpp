@@ -9,6 +9,7 @@
 
 #define FREE_CAMERA 0
 #define THIRD_UP 1
+#define GEO_ESTACIONARIA 2
 #define OBSERVER_SPEED 8
 
 class Observer{
