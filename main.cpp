@@ -2,21 +2,20 @@
 #include <cmath>
 #include <GL/glu.h>
 #include "Boid_container.hpp"
-#include "Earth.hpp"
-#include "Observer.hpp"
+#include "Planeta.hpp"
+#include "observer.hpp"
 
-Earth mundo;
-Observer observer;
+
+
+Planeta mundo(INCLINACAO_TERRA, PERIODO_ROT_TERRA, PERIODO_TRANS_TERRA, GRAVIDADE_TERRA, RAIO_TERRA, 100,0,0);
 
 void draw_scene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
-		observer.look();
+		observer_look();
 		
-		mundo.earth_draw();
-		mundo.earth_debug();
+		mundo.draw();
 		
-		mundo.sun_draw();
 		
 	glPopMatrix();
 	
@@ -28,22 +27,16 @@ void reshape (int w, int h){
 	glViewport (0,0, w/ratio*2, h); 
 }
 
-
-
-
-
-
 void boids_main_loop(int value){
-	observer.move();
-	if(observer.pause){
-		glutTimerFunc(15, boids_main_loop, value);
+	if(observer_pause){
+		glutTimerFunc(TAXA_DE_ATUALIZACAO/2, boids_main_loop, value);
 		return;
 	}
 	if(value){
-		glutTimerFunc(15, boids_main_loop, !value);
+		glutTimerFunc(TAXA_DE_ATUALIZACAO/2, boids_main_loop, !value);
 		mundo.refresh();
 	}else{
-		glutTimerFunc(15, boids_main_loop, !value);
+		glutTimerFunc(TAXA_DE_ATUALIZACAO/2, boids_main_loop, !value);
 		glutPostRedisplay();
 	}
 
@@ -64,16 +57,16 @@ int main(int argc, char**argv){
 	glEnable(GL_DEPTH_TEST);
 	
 	glViewport(0,0,1200,600);
-	glFrustum(-2,2,-1,1,8,2048*RAIO_TERRESTRE);
+	glFrustum(-2,2,-1,1,8,2048*RAIO_TERRA);
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE );
 	
-	observer.init(&mundo);
+	observer_init(&mundo);
 	Boid::compile_vertexes();
-	Earth::compile_vertexes();
+	Planeta::compile_vertexes();
 	
 	for(int i=0;i<200;i++){
-		mundo.boid_container.add_boid(RAIO_TERRESTRE+1,RAIO_TERRESTRE+8);
+		mundo.boid_container.add_boid_rand();
 	}
 	
 	glutMainLoop();

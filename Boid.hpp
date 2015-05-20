@@ -5,13 +5,13 @@
 #include <GL/gl.h>
 #include <cmath>
 #include <cstdlib>
-#include "PI.h"
+#include "esfera.h"
 #define SCALER 0.25
 
-class Earth;
+class Planeta;
 
 class Boid {
-friend class Earth;
+friend class Planeta;
 
 public:
 	const unsigned int id;

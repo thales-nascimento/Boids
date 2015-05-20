@@ -1,9 +1,5 @@
 #include "Boid_container.hpp"
 
-
-int Boid_container::H_SETPOINT = RAIO_TERRESTRE+3;
-
-
 bool sort_id(Boid a, Boid b){
 	return a.id < b.id;
 }
@@ -39,10 +35,10 @@ void Boid_container::add_boid(double x, double y, double z){
 	Boid::idcont++;
 }
 
-void Boid_container::add_boid(int min_dist, int max_dist){
+void Boid_container::add_boid_rand(){
 	Vetor aleatorio((signed short)rand(),(signed short)rand(),(signed short)rand());
 	aleatorio.normalizar();
-	int tamanho = rand()%(max_dist-min_dist)+min_dist;
+	int tamanho = rand()%(max_height-min_height)+min_height;
 	aleatorio *=tamanho;
 	add_boid(aleatorio.x, aleatorio.y,aleatorio.z);
 }
@@ -58,19 +54,18 @@ void Boid_container::remove_boid(){
 
 //atualização
 
-
 void Boid_container::refresh_boids(){
 	for(list<Boid>::iterator boid_atual = boids.begin(); boid_atual != boids.end(); boid_atual++){
 		list<Boid*> visiveis;
 		
-		Vetor aceleracao;
+		Vetor aceleracao(0,0,0);
 		Vetor altura = (*boid_atual).get_coordenadas();
 		Vetor versor_altura = altura;
 		versor_altura.normalizar();
-		
-		if(H_SETPOINT-altura.norma() > 0)aceleracao += (H_SETPOINT-altura.norma())*(H_SETPOINT-altura.norma())*versor_altura;
-		
-		
+
+		if(min_height-altura.norma() > 0)aceleracao += (min_height-altura.norma())*(min_height-altura.norma())*versor_altura;
+		else if(altura.norma() - max_height > 0)aceleracao += (max_height-altura.norma())*versor_altura;
+
 		switch((*boid_atual).vizinhos_vistos){
 			case 0: esfera_visao(*boid_atual,7, visiveis);
 			break;
@@ -80,7 +75,6 @@ void Boid_container::refresh_boids(){
 		}
 		(*boid_atual).vizinhos_vistos = visiveis.size();
 
-		
 		Vetor repulsao, alinhamento, coesao;
 		for(list<Boid*>::iterator boid_atuante = visiveis.begin(); boid_atuante != visiveis.end(); boid_atuante++){
 			Vetor distancia = (*boid_atuante)->get_coordenadas() - (*boid_atual).get_coordenadas();
@@ -96,7 +90,7 @@ void Boid_container::refresh_boids(){
 			(*boid_atual).mudar_aceleracao(aceleracao);
 			continue;
 		}
-		
+			
 		coesao *= K_COESAO;
 		aceleracao += coesao;
 		alinhamento *= K_ALINHAMENTO;
@@ -135,6 +129,14 @@ void Boid_container::draw_boids(){
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		(*atual).draw();
 	}
+}
+
+
+//definidor da atmosfera
+
+void Boid_container::define_atmosfera(int bottom, int top){
+	min_height = bottom;
+	max_height = top;
 }
 
 
