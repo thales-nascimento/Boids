@@ -17,17 +17,22 @@ using namespace std;
 #define K_ALINHAMENTO 7.0
 #define K_LIDERANCA 1
 
+#define K_DIRECIONAMENTO 1
+#define INFLUENCIA_LIDER 14
+
 class Planeta;
 
 class Boid_container{
 friend class Planeta;
 private:
 	list<Boid> boids;
-	Boid lider;
+	
+	Boid *lider=NULL;
+	void liderar();
+	Vetor setpoint;
 	
 	void esfera_visao(Boid& atual,float multiplicador, list<Boid*> &visiveis);
 	
-	void lideranca();	
 	int max_height;
 	int min_height;
 	
@@ -37,6 +42,10 @@ public:
 	void add_boid(double x, double y, double z);
 	void add_boid_rand();
 	void remove_boid();
+	
+	void designa_lider(unsigned int id);
+	void set_point(double x, double y, double z);
+	void set_point(double theta, double phi);
 	
 	void refresh_boids();
 	void draw_boids();

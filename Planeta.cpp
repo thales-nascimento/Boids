@@ -11,12 +11,7 @@ void Planeta::gravitacionar(){
 
 void Planeta::transladar(){
 	const static double incremento = 1.0/TAXA_DE_ATUALIZACAO/PERIODO_TRANSLACAO;
-	double x,z;
-	x = cos(incremento)*coordenadas.x - sin(incremento)*coordenadas.z;
-	z = sin(incremento)*coordenadas.x + cos(incremento)*coordenadas.z;
-			
-	coordenadas.x = x;
-	coordenadas.z = z;
+	coordenadas.rotacionar_em_y(incremento);
 }
 
 void Planeta::refresh(){
@@ -52,7 +47,6 @@ void Planeta::compile_vertexes(){
 void Planeta::draw(){
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINES );	
-	glColor3ub(0xff,0xff,0xff);
 	
 	glPushMatrix();
 		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
@@ -62,6 +56,7 @@ void Planeta::draw(){
 		boid_container.draw_boids();
 		
 		glScalef(RAIO,RAIO,RAIO);
+		glColor3ub(0xff,0xff,0xff);
 		glCallList(esfera);
 	glPopMatrix();
 }

@@ -13,6 +13,10 @@ class Vetor{
 	double norma();
 	void normalizar();
 	
+	void rotacionar_em_x(double angulo);
+	void rotacionar_em_y(double angulo);
+	void rotacionar_em_z(double angulo);
+	
 	Vetor(double x0, double y0, double z0, double x1, double y1, double z1);
 	Vetor();
 	Vetor(double x, double y, double z);
@@ -34,5 +38,6 @@ void operator *=(Vetor& v, double k);
 
 Vetor produto_vetorial(Vetor v, Vetor w);
 double produto_escalar(Vetor v, Vetor w);
+
 
 #endif

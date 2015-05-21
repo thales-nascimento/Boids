@@ -68,6 +68,7 @@ int main(int argc, char**argv){
 	for(int i=0;i<200;i++){
 		mundo.boid_container.add_boid_rand();
 	}
+	mundo.boid_container.designa_lider(0);
 	
 	glutMainLoop();
 }

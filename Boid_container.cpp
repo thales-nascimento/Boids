@@ -1,5 +1,7 @@
 #include "Boid_container.hpp"
 
+bool setpoint_enabled = false;
+
 bool sort_id(Boid a, Boid b){
 	return a.id < b.id;
 }
@@ -51,6 +53,34 @@ void Boid_container::remove_boid(){
 	
 }
 
+void Boid_container::designa_lider(unsigned int id){
+	lider = procurar_boid(id);
+}
+
+//lideranca
+
+void Boid_container::liderar(){
+	if(setpoint_enabled){
+		Vetor direcionamento = setpoint - lider->get_coordenadas();
+		direcionamento *= K_DIRECIONAMENTO;
+		lider->mudar_aceleracao(direcionamento);
+	}
+}
+
+void Boid_container::set_point(double x, double y, double z){
+	setpoint = Vetor(x,y,z);
+}
+
+void Boid_container::set_point(double theta, double phi){
+	setpoint = Vetor((min_height + max_height)/2 ,0,0);
+	setpoint.rotacionar_em_y(theta);
+	setpoint.rotacionar_em_x(phi);
+}
+
+void toggle_setpoint(){
+	setpoint_enabled = !setpoint_enabled;
+}
+
 
 //atualização
 
@@ -90,13 +120,21 @@ void Boid_container::refresh_boids(){
 			(*boid_atual).mudar_aceleracao(aceleracao);
 			continue;
 		}
+		Vetor lideranca(0,0,0);
+		if(lider != NULL){
+			lideranca = lider->get_coordenadas() - (*boid_atual).get_coordenadas();
+			if(lideranca.norma() > Boid::CAMPO_DE_VISAO*INFLUENCIA_LIDER)lideranca = Vetor(0,0,0);
+			lideranca.normalizar();
+			lideranca *= K_LIDERANCA;
+		}
 			
 		coesao *= K_COESAO;
-		aceleracao += coesao;
 		alinhamento *= K_ALINHAMENTO;
-		aceleracao += alinhamento;
+		aceleracao += alinhamento + coesao + lideranca;
 		(*boid_atual).mudar_aceleracao(aceleracao);
 	}
+	
+	liderar();
 	
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		(*atual).refresh();
@@ -122,10 +160,15 @@ void Boid_container::print_boids(){
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		cout<<(*atual).get_coordenadas().x<<"	"<<(*atual).get_coordenadas().y<<"	"<<(*atual).get_coordenadas().z<<"	|	"<<(*atual).get_aceleracao().norma()<<"	"<<(*atual).get_velocidade().norma()<<endl;
 	}
+
 }
 
 void Boid_container::draw_boids(){
-	Vetor local;
+	if(lider != NULL){
+		glColor3ub(0xff,0xff,0);
+		(*lider).draw();
+	}
+	glColor3ub(0xff,0,0xff);
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		(*atual).draw();
 	}

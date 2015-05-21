@@ -66,7 +66,6 @@ GLuint Boid::boid = 0;
 void Boid::compile_vertexes(){
 	Boid::boid = glGenLists(1);
 	glNewList(boid, GL_COMPILE);
-		glColor3ub(0x79,0xff,0x79);
 		glBegin(GL_TRIANGLES);
 			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
 			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-2*SCALER);
