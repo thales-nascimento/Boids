@@ -7,14 +7,19 @@
 
 
 
-Planeta mundo(INCLINACAO_TERRA, PERIODO_ROT_TERRA, PERIODO_TRANS_TERRA, GRAVIDADE_TERRA, RAIO_TERRA, 100,0,0);
+Planeta terra(INCLINACAO_TERRA, PERIODO_ROT_TERRA, PERIODO_TRANS_TERRA, GRAVIDADE_TERRA, RAIO_TERRA, DIST_TERRA_SOL);
+Planeta sol(0,PERIODO_ROT_SOL,1,1,RAIO_SOL,0);
 
 void draw_scene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPushMatrix();
 		observer_look();
 		
-		mundo.draw();
+		glColor3ub(0xff,0xff,0);
+		terra.draw();
+		
+		glColor3ub(0xff,0xff,0);
+		sol.draw();
 		
 		
 	glPopMatrix();
@@ -34,7 +39,8 @@ void boids_main_loop(int value){
 	}
 	if(value){
 		glutTimerFunc(TAXA_DE_ATUALIZACAO/2, boids_main_loop, !value);
-		mundo.refresh();
+		terra.refresh();
+		sol.refresh();
 	}else{
 		glutTimerFunc(TAXA_DE_ATUALIZACAO/2, boids_main_loop, !value);
 		glutPostRedisplay();
@@ -57,18 +63,20 @@ int main(int argc, char**argv){
 	glEnable(GL_DEPTH_TEST);
 	
 	glViewport(0,0,1200,600);
-	glFrustum(-2,2,-1,1,8,2048*RAIO_TERRA);
+	glFrustum(-2,2,-1,1,8,DIST_TERRA_SOL  + RAIO_SOL);
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE );
 	
-	observer_init(&mundo);
+	observer_init(&terra);
 	Boid::compile_vertexes();
 	Planeta::compile_vertexes();
+	terra.change_color(0x79,0x79,0xff);
+	sol.change_color(0xff,0xff,0x79);
 	
 	for(int i=0;i<200;i++){
-		mundo.boid_container.add_boid_rand();
+		terra.boid_container.add_boid_rand();
 	}
-	mundo.boid_container.designa_lider(0);
+	terra.boid_container.designa_lider(0);
 	
 	glutMainLoop();
 }

@@ -10,7 +10,7 @@ void Planeta::gravitacionar(){
 
 
 void Planeta::transladar(){
-	const static double incremento = 1.0/TAXA_DE_ATUALIZACAO/PERIODO_TRANSLACAO;
+	const static double incremento = 1.0/(double)TAXA_DE_ATUALIZACAO/(double)PERIODO_TRANSLACAO;
 	coordenadas.rotacionar_em_y(incremento);
 }
 
@@ -56,7 +56,7 @@ void Planeta::draw(){
 		boid_container.draw_boids();
 		
 		glScalef(RAIO,RAIO,RAIO);
-		glColor3ub(0xff,0xff,0xff);
+		glColor3ubv(color);
 		glCallList(esfera);
 	glPopMatrix();
 }
@@ -75,6 +75,12 @@ void Planeta::draw_axis(){
 	glEnd();
 }
 
+void Planeta::change_color(unsigned char r, unsigned char g, unsigned char b){
+	color[0] = r;
+	color[1] = g;
+	color[2] = b;
+}
+
 double Planeta::get_rotation(){
 	return angulo_rotacao;
 }
@@ -83,7 +89,7 @@ Vetor Planeta::get_coordenadas(){
 	return coordenadas;
 }
 
-Planeta::Planeta(double inclinacao_rotacao, unsigned int periodo_rotacao, unsigned int periodo_translacao, double constante_gravidade, unsigned int raio, double x,double y,double z):
+Planeta::Planeta(double inclinacao_rotacao, unsigned int periodo_rotacao, unsigned int periodo_translacao, double constante_gravidade, unsigned int raio, int distancia_centro):
 	PERIODO_ROTACAO(periodo_rotacao),
 	PERIODO_TRANSLACAO(periodo_translacao),
 	INCLINACAO_ROT(inclinacao_rotacao),
@@ -91,8 +97,10 @@ Planeta::Planeta(double inclinacao_rotacao, unsigned int periodo_rotacao, unsign
 	RAIO(raio){
 	angulo_rotacao = 0;
 	boid_container.define_atmosfera(RAIO + ATMOSFERA_BOT, RAIO + ATMOSFERA_TOP);
-	coordenadas.x = x;
-	coordenadas.y = y;
-	coordenadas.z = z;
+	int dist_x = 0;
+	if(distancia_centro != 0)dist_x = rand() % distancia_centro;
+	coordenadas.x = dist_x;
+	coordenadas.z = distancia_centro - dist_x;
+	color[0]=color[1]=color[2]=0xff;
 }
 

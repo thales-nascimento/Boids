@@ -14,6 +14,7 @@
 
 class Planeta{
 private:
+	unsigned char color[3];
 	
 	void gravitacionar();
 	void transladar();
@@ -34,14 +35,16 @@ public:
 	static void compile_vertexes();
 	void draw();
 	void draw_axis();
+	void change_color(unsigned char, unsigned char, unsigned char);
 	
 	void refresh();
 	
 	double get_rotation();
 	Vetor get_coordenadas();
 	
-	Planeta(double inclinacao_rotacao, unsigned int periodo_rotacao, unsigned int periodo_translacao, double constante_gravidade, unsigned int raio, double x,double y,double z);
+	Planeta(double inclinacao_rotacao, unsigned int periodo_rotacao, unsigned int periodo_translacao, double constante_gravidade, unsigned int raio, int distancia_centro);
 
+	
 };
 
 #endif
