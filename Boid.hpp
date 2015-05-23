@@ -49,7 +49,7 @@ private:
 	
 	void acelerar();
 	void mover();
-	
+
 };
 
 #endif

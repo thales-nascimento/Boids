@@ -9,6 +9,8 @@
 
 Planeta terra(INCLINACAO_TERRA, PERIODO_ROT_TERRA, PERIODO_TRANS_TERRA, GRAVIDADE_TERRA, RAIO_TERRA, DIST_TERRA_SOL);
 Planeta sol(0,PERIODO_ROT_SOL,1,1,RAIO_SOL,0);
+Planeta marte(INCLINACAO_MARTE, PERIODO_ROT_MARTE, PERIODO_TRANS_MARTE, GRAVIDADE_MARTE, RAIO_MARTE, DIST_MARTE_SOL);
+
 
 void draw_scene(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -17,6 +19,9 @@ void draw_scene(){
 		
 		glColor3ub(0xff,0xff,0);
 		terra.draw();
+		
+		glColor3ub(0xff,0xff,0);
+		marte.draw();
 		
 		glColor3ub(0xff,0xff,0);
 		sol.draw();
@@ -40,6 +45,7 @@ void boids_main_loop(int value){
 	if(value){
 		glutTimerFunc(TAXA_DE_ATUALIZACAO/2, boids_main_loop, !value);
 		terra.refresh();
+		marte.refresh();
 		sol.refresh();
 	}else{
 		glutTimerFunc(TAXA_DE_ATUALIZACAO/2, boids_main_loop, !value);
@@ -71,6 +77,7 @@ int main(int argc, char**argv){
 	Boid::compile_vertexes();
 	Planeta::compile_vertexes();
 	terra.change_color(0x79,0x79,0xff);
+	marte.change_color(0xff,0x79,0x79);
 	sol.change_color(0xff,0xff,0x79);
 	
 	for(int i=0;i<200;i++){

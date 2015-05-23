@@ -67,7 +67,7 @@ void Boid::compile_vertexes(){
 	Boid::boid = glGenLists(1);
 	glNewList(boid, GL_COMPILE);
 		glBegin(GL_TRIANGLES);
-			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
+			/*glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
 			glVertex3f(SCALER*cos(PI*4/3),SCALER*sin(PI*4/3),-2*SCALER);
 			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-2*SCALER);
 			
@@ -81,7 +81,11 @@ void Boid::compile_vertexes(){
 			
 			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-2*SCALER);
 			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
-			glVertex3f(0,0,3*SCALER);
+			glVertex3f(0,0,3*SCALER);*/
+			glVertex3f(SCALER,0,-SCALER);
+			glVertex3f(-SCALER,0,-SCALER);
+			glVertex3f(0,0,SCALER);
+			
 		
 		glEnd();
 	glEndList();

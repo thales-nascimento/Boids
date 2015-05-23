@@ -13,6 +13,7 @@ bool observer_pause=false;
 int modo_observacao = FREE_CAMERA;
 
 unsigned int id_observado=0;
+Boid* last_boid;
 
 double theta_geoestacionaria = 0;
 double theta_free=0, phi_free=0;
@@ -34,7 +35,7 @@ void observer_look(){
 		case THIRD_SIDE:
 		case THIRD_UP:{			
 			static unsigned int last_id=0;
-			static Boid* last_boid = planeta->boid_container.procurar_boid(last_id);
+			last_boid = planeta->boid_container.procurar_boid(last_id);
 			if(last_id != id_observado){
 				last_id = id_observado;
 				last_boid = planeta->boid_container.procurar_boid(last_id);
@@ -182,9 +183,15 @@ int last_x=0, last_y=0;
 void passive_mouse(int x, int y){
 	last_x = x;
 	last_y = y;
-}
-void active_mouse(int x, int y){
+}/*
+void passive_mouse_first(int x, int y){
+	int dx = x-last_x;
+	int dy = y-last_y;
+	last_x = x;
+	last_y = y;	
 	
+}*/
+void active_mouse(int x, int y){
 	int dx = x-last_x;
 	int dy = y-last_y;
 	last_x = x;
@@ -197,6 +204,7 @@ void active_mouse(int x, int y){
 	
 }
 void active_mouse_unused(int x,int y){}
+
 
 void wheel_mouse_free(int button, int status, int x, int y){
 	switch(button){
