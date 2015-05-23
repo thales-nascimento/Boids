@@ -4,6 +4,7 @@
 #define THIRD_UP 1
 #define THIRD_SIDE 2
 #define GEO_ESTACIONARIA 3
+#define FIRST 4
 #define OBSERVER_SPEED 8
 
 Planeta *planeta;
@@ -15,7 +16,7 @@ unsigned int id_observado=0;
 
 double theta_geoestacionaria = 0;
 double theta_free=0, phi_free=0;
-float distancia_geoestacionaria=RAIO_TERRA+1000;
+float distancia_terceira_pessoa=RAIO_TERRA+1000;
 
 Vetor posicao_observador;
 
@@ -29,33 +30,8 @@ void observer_look(){
 					posicao_observador.x+abscosphi*cos(theta_free), posicao_observador.y+sin(phi_free), posicao_observador.z+abscosphi*sin(theta_free),
 					cos(phi_free+PI/2)*cos(theta_free),cos(phi_free),cos(phi_free+PI/2)*sin(theta_free) );
 		}break;
-		case THIRD_SIDE:{			
-			static unsigned int last_id=0;
-			static Boid* last_boid = planeta->boid_container.procurar_boid(last_id);
-			if(last_id != id_observado){
-				last_id = id_observado;
-				last_boid = planeta->boid_container.procurar_boid(last_id);
-			}
-			Vetor centro = planeta->get_coordenadas();
-			
-			Vetor posicao_observador = last_boid->get_coordenadas();
-			posicao_observador.rotacionar_em_y(-planeta->get_rotation());
-			posicao_observador.rotacionar_em_x(planeta->INCLINACAO_ROT);
-			posicao_observador.normalizar();
-			
-			posicao_observador += produto_vetorial(posicao_observador, Vetor(0,cos(planeta->INCLINACAO_ROT),sin(planeta->INCLINACAO_ROT)));
-			Vetor up = last_boid->get_coordenadas();
-			up.rotacionar_em_y(-planeta->get_rotation());
-			up.rotacionar_em_x(planeta->INCLINACAO_ROT);
-			posicao_observador *= distancia_geoestacionaria;
-			posicao_observador += centro;
-			centro += up;
-					
-			gluLookAt(posicao_observador.x,posicao_observador.y,posicao_observador.z,
-					centro.x,centro.y,centro.z,
-					up.x,up.y,up.z);
-					
-		}break;
+		case FIRST:
+		case THIRD_SIDE:
 		case THIRD_UP:{			
 			static unsigned int last_id=0;
 			static Boid* last_boid = planeta->boid_container.procurar_boid(last_id);
@@ -64,24 +40,46 @@ void observer_look(){
 				last_boid = planeta->boid_container.procurar_boid(last_id);
 			}
 			Vetor centro = planeta->get_coordenadas();
+			Vetor up;
 			
 			Vetor posicao_observador = last_boid->get_coordenadas();
-			Vetor up = produto_vetorial(posicao_observador, Vetor(0,cos(planeta->INCLINACAO_ROT),sin(planeta->INCLINACAO_ROT)));
-			
 			posicao_observador.rotacionar_em_y(-planeta->get_rotation());
 			posicao_observador.rotacionar_em_x(planeta->INCLINACAO_ROT);
-			posicao_observador.normalizar();
 			
-			posicao_observador *= distancia_geoestacionaria;
-			posicao_observador += centro;			
+			if(modo_observacao == THIRD_SIDE){
+				posicao_observador.normalizar();	
+				posicao_observador += produto_vetorial(posicao_observador, Vetor(0,cos(planeta->INCLINACAO_ROT),sin(planeta->INCLINACAO_ROT)));
+				up = last_boid->get_coordenadas();
+				up.rotacionar_em_y(-planeta->get_rotation());
+				up.rotacionar_em_x(planeta->INCLINACAO_ROT);
+				posicao_observador *= distancia_terceira_pessoa;
+				posicao_observador += centro;
+				centro += up;
+			
+			} else if(modo_observacao == THIRD_UP){ 
+				posicao_observador.normalizar();
+				up = produto_vetorial(posicao_observador, Vetor(0,cos(planeta->INCLINACAO_ROT),sin(planeta->INCLINACAO_ROT)));
+				posicao_observador *= distancia_terceira_pessoa;
+				posicao_observador += centro;
+			
+			} else {
+				up = posicao_observador;
+				Vetor velocidade = last_boid->get_velocidade();
+				velocidade.rotacionar_em_y(-planeta->get_rotation());
+				velocidade.rotacionar_em_x(planeta->INCLINACAO_ROT);
+				centro += posicao_observador + velocidade;
+				posicao_observador = centro - velocidade;
+			}
+			
 			gluLookAt(posicao_observador.x,posicao_observador.y,posicao_observador.z,
 					centro.x,centro.y,centro.z,
 					up.x,up.y,up.z);
+			
 					
 		}break;
 		case GEO_ESTACIONARIA:{
 			double rotacao = planeta->get_rotation();
-			Vetor posicao_observador(distancia_geoestacionaria,0,0);
+			Vetor posicao_observador(distancia_terceira_pessoa,0,0);
 			posicao_observador.rotacionar_em_y(-rotacao + theta_geoestacionaria);
 			posicao_observador.rotacionar_em_x(planeta->INCLINACAO_ROT);
 			
@@ -95,6 +93,21 @@ void observer_look(){
 	}
 	
 	glutPostRedisplay();
+}
+
+void change_camera(unsigned char key){
+	switch(key){
+		case '1': observer_change_mode(FREE_CAMERA);
+		break;
+		case '2': observer_change_mode(THIRD_UP);
+		break;
+		case '3': observer_change_mode(THIRD_SIDE);
+		break;
+		case '4': observer_change_mode(GEO_ESTACIONARIA);
+		break;
+		case '5': observer_change_mode(FIRST);
+		break;
+	}
 }
 
 void keyboard_free_camera(unsigned char key,int x, int y){
@@ -129,14 +142,7 @@ void keyboard_free_camera(unsigned char key,int x, int y){
 			posicao_observador.x+=OBSERVER_SPEED*cos(theta_free)*sin(phi_free);
 			posicao_observador.y-=OBSERVER_SPEED*cos(phi_free);
 		}break;
-		case '1': observer_change_mode(FREE_CAMERA);
-		break;
-		case '2': observer_change_mode(THIRD_UP);
-		break;
-		case '3': observer_change_mode(THIRD_SIDE);
-		break;
-		case '4': observer_change_mode(GEO_ESTACIONARIA);
-		break;
+		default:change_camera(key);
 	}
 }
 void keyboard_third(unsigned char key,int x, int y){
@@ -163,18 +169,11 @@ void keyboard_third(unsigned char key,int x, int y){
 		break;
 		case 'd': theta_geoestacionaria += .01;
 		break;
-		case 'w': distancia_geoestacionaria -=5;
+		case 'w': distancia_terceira_pessoa -=5;
 		break;
-		case 's': distancia_geoestacionaria +=5;
+		case 's': distancia_terceira_pessoa +=5;
 		break;
-		case '1': observer_change_mode(FREE_CAMERA);
-		break;
-		case '2': observer_change_mode(THIRD_UP);
-		break;
-		case '3': observer_change_mode(THIRD_SIDE);
-		break;
-		case '4': observer_change_mode(GEO_ESTACIONARIA);
-		break;
+		default:change_camera(key);
 	}
 }
 
@@ -216,10 +215,10 @@ void wheel_mouse_free(int button, int status, int x, int y){
 void wheel_mouse_third(int button, int status, int x, int y){
 	switch(button){
 		case 3:{
-			distancia_geoestacionaria -= 10;
+			distancia_terceira_pessoa -= 10;
 		}break;
 		case 4:{
-			distancia_geoestacionaria += 10;
+			distancia_terceira_pessoa += 10;
 		}break;
 	}
 }
@@ -232,6 +231,7 @@ void observer_change_mode(int mode){
 			glutMouseFunc(wheel_mouse_free);
 			glutKeyboardFunc(keyboard_free_camera);
 		}break;
+		case FIRST:
 		case THIRD_UP:
 		case THIRD_SIDE:{
 			glutMotionFunc(active_mouse_unused);

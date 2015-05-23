@@ -63,7 +63,7 @@ int main(int argc, char**argv){
 	glEnable(GL_DEPTH_TEST);
 	
 	glViewport(0,0,1200,600);
-	glFrustum(-2,2,-1,1,8,DIST_TERRA_SOL  + RAIO_SOL);
+	glFrustum(-.25,.25,-.125,.125,1,DIST_TERRA_SOL  + RAIO_SOL);
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE );
 	
