@@ -12,7 +12,7 @@
 using namespace std;
 
 //constantes das forças atuantes nos boids
-#define K_COESAO 1.5
+#define K_COESAO 3
 #define K_REPULSAO 1.5
 #define K_ALINHAMENTO 7.0
 #define K_LIDERANCA 1
@@ -44,8 +44,8 @@ public:
 	void remove_boid_rand();
 	
 	void designa_lider(unsigned int id);
-	void set_point(double x, double y, double z);
-	void set_point(double theta, double phi);
+	void set_point(double theta, double phi, double rotacao);
+	void toggle_setpoint();
 	
 	void refresh_boids();
 	void draw_boids();

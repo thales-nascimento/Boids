@@ -1,6 +1,10 @@
 #ifndef __BOID_HPP_INCLUDED__
 #define __BOID_HPP_INCLUDED__
 
+extern "C"{
+#include "blender_model_importer.h"
+}
+
 #include "Vetor.hpp"
 #include <GL/gl.h>
 #include <cmath>

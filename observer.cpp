@@ -25,6 +25,8 @@ float distancia_terceira_pessoa=RAIO_TERRA+1000;
 Vetor posicao_observador;
 
 
+void observer_change_mode(int mode);
+
 //callbacks para o teclado
 //_---_-___--__-_-_--___--_--_--___--____-_--__-___--_----
 void keyboard_generico(unsigned char key){
@@ -39,6 +41,8 @@ void keyboard_generico(unsigned char key){
 		break;
 		case '5': observer_change_mode(FIRST);
 		break;
+		case 13: planeta->boid_container.toggle_setpoint();		//ENTER
+		break;
 		case '+': 
 		case '-':{
 			if(key == '+')planeta->boid_container.add_boid_rand();
@@ -50,21 +54,22 @@ void keyboard_generico(unsigned char key){
 		}break;
 	}
 }
-/*
-void keyboard_setpoint(unsigned int key, int x, int y){
+
+void keyboard_setpoint(int key, int x, int y){
 	static double phi=0,theta=0;
 	switch(key){
-		case yup:phi+=.01;
+		case GLUT_KEY_UP:phi+=.1;
 		break;
-		case down:phi-=.01;
+		case GLUT_KEY_DOWN:phi-=.1;
 		break;
-		case left:theta -= .01;
+		case GLUT_KEY_LEFT:theta -= .1;
 		break;
-		case rigth:theta += .01;
+		case GLUT_KEY_RIGHT:theta += .1;
+		break;
 	}
 	
-	planeta->boid_container->set_point(theta,phi);
-}*/
+	planeta->boid_container.set_point(theta,phi, planeta->get_rotation());
+}
 
 void keyboard_free_camera(unsigned char key,int x, int y){
 	switch(key){
@@ -88,12 +93,12 @@ void keyboard_free_camera(unsigned char key,int x, int y){
 			posicao_observador.x-=OBSERVER_SPEED*sin(theta_free);
 			posicao_observador.z+=OBSERVER_SPEED*cos(theta_free);
 		}break;
-		case 'i':{
+		case 'r':{
 			posicao_observador.z-=OBSERVER_SPEED*sin(theta_free)*sin(phi_free);
 			posicao_observador.x-=OBSERVER_SPEED*cos(theta_free)*sin(phi_free);
 			posicao_observador.y+=OBSERVER_SPEED*cos(phi_free);
 		}break;
-		case 'k':{
+		case 'f':{
 			posicao_observador.z+=OBSERVER_SPEED*sin(theta_free)*sin(phi_free);
 			posicao_observador.x+=OBSERVER_SPEED*cos(theta_free)*sin(phi_free);
 			posicao_observador.y-=OBSERVER_SPEED*cos(phi_free);
@@ -374,6 +379,7 @@ void observer_init(Planeta *planet, Hud *h){
 	_hud->add_button(1,8,DECREMENTA_BOIDS,(char*)"<");_hud->add_button(2,8,INCREMENTA_BOIDS,(char*)">");
 	
 	glutPassiveMotionFunc(passive_mouse);
+	glutSpecialFunc(keyboard_setpoint);
 	observer_change_mode(FREE_CAMERA);
 	posicao_observador = planet->get_coordenadas();
 	posicao_observador.z -=  planet->RAIO*2;

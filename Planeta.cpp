@@ -57,6 +57,7 @@ void Planeta::draw(){
 		
 		glScalef(RAIO,RAIO,RAIO);
 		glColor3ubv(color);
+		
 		glCallList(esfera);
 	glPopMatrix();
 }

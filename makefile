@@ -1,7 +1,7 @@
 CC = g++
 
-all: Boid.o Boid_container.o Vetor.o Planeta.o observer.o Hud.o main.cpp
-	$(CC) -o boids Boid.o Boid_container.o Vetor.o Planeta.o observer.o Hud.o main.cpp -lGL -lglut -lm -lGLU
+all: Boid.o Boid_container.o Vetor.o Planeta.o observer.o Hud.o blender_model_importer.o main.cpp
+	$(CC) -o boids Boid.o Boid_container.o Vetor.o Planeta.o observer.o Hud.o blender_model_importer.o main.cpp -lGL -lglut -lm -lGLU
 
 Vetor.o:
 	$(CC) -c -o Vetor.o Vetor.cpp
@@ -20,6 +20,9 @@ observer.o:
 
 Hud.o:
 	$(CC) -c -o Hud.o HUD/Hud.cpp
+	
+blender_model_importer.o:
+	gcc -c -o blender_model_importer.o blender_model_importer.c
 	
 clear:
 	rm *.o boids

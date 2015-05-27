@@ -72,17 +72,13 @@ void Boid_container::liderar(){
 	}
 }
 
-void Boid_container::set_point(double x, double y, double z){
-	setpoint = Vetor(x,y,z);
+void Boid_container::set_point(double theta, double phi, double rotacao){
+	setpoint = Vetor((min_height + max_height)/2*cos(phi),(min_height + max_height)/2*sin(phi),0);
+	setpoint.rotacionar_em_y(theta + rotacao);
+	
 }
 
-void Boid_container::set_point(double theta, double phi){
-	setpoint = Vetor((min_height + max_height)/2 ,0,0);
-	setpoint.rotacionar_em_y(theta);
-	setpoint.rotacionar_em_x(phi);
-}
-
-void toggle_setpoint(){
+void Boid_container::toggle_setpoint(){
 	setpoint_enabled = !setpoint_enabled;
 }
 
@@ -159,7 +155,6 @@ void Boid_container::esfera_visao(Boid& atual, float multiplicador, list<Boid*> 
 }
 
 
-
 //output
 void Boid_container::print_boids(){
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
@@ -172,11 +167,25 @@ void Boid_container::draw_boids(){
 	if(lider != NULL){
 		glColor3ub(0xff,0xff,0);
 		(*lider).draw();
+		if(setpoint_enabled){
+			glPushMatrix();
+				glTranslated(setpoint.x,setpoint.y,setpoint.z);
+				const float mult = 5;
+				glBegin(GL_LINE_STRIP);
+					glVertex3f(mult*-.86602,0,mult*-.5);
+					glVertex3f(mult*.86602,0,mult*-.5);
+					glVertex3f(0,0,mult*.5);
+					glVertex3f(0,mult*2,0);
+				
+				glEnd();
+			glPopMatrix();
+		}
 	}
 	glColor3ub(0xff,0,0xff);
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		(*atual).draw();
 	}
+	
 }
 
 
