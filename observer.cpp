@@ -170,7 +170,6 @@ void active_mouse_unused(int x,int y){}
 
 void hud_mouse(int x,int y){
 	int acao = _hud->hover_buttons(x,y,true);
-	cout<<acao;
 	switch(acao){
 		case BOID_ANTERIOR:
 		case PROXIMO_BOID:{ 

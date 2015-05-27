@@ -67,6 +67,7 @@ void Boid_container::designa_lider(unsigned int id){
 void Boid_container::liderar(){
 	if(setpoint_enabled && lider != NULL){
 		Vetor direcionamento = setpoint - lider->get_coordenadas();
+		direcionamento.normalizar();
 		direcionamento *= K_DIRECIONAMENTO;
 		lider->mudar_aceleracao(direcionamento);
 	}
