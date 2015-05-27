@@ -29,6 +29,10 @@ Boid* Boid_container::procurar_boid(unsigned int id){
 	return &(*i);
 }
 
+unsigned int Boid_container::get_n_boids(){
+	return boids.size();
+}
+
 //adicionar e remover boids
 
 void Boid_container::add_boid(double x, double y, double z){
@@ -45,10 +49,11 @@ void Boid_container::add_boid_rand(){
 	add_boid(aleatorio.x, aleatorio.y,aleatorio.z);
 }
 
-void Boid_container::remove_boid(){
+void Boid_container::remove_boid_rand(){
 	if(boids.empty())return;
 	list<Boid>::iterator i = boids.begin();
 	advance(i, rand()%boids.size());			//remover um boid aleatório
+	if(&(*i) == lider)lider=NULL;	//remocao com seguranca do lider
 	boids.erase(i);
 	
 }
@@ -60,7 +65,7 @@ void Boid_container::designa_lider(unsigned int id){
 //lideranca
 
 void Boid_container::liderar(){
-	if(setpoint_enabled){
+	if(setpoint_enabled && lider != NULL){
 		Vetor direcionamento = setpoint - lider->get_coordenadas();
 		direcionamento *= K_DIRECIONAMENTO;
 		lider->mudar_aceleracao(direcionamento);

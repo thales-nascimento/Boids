@@ -82,9 +82,9 @@ void Boid::compile_vertexes(){
 			glVertex3f(SCALER*cos(PI*2),SCALER*sin(PI*2),-2*SCALER);
 			glVertex3f(SCALER*cos(PI*2/3),SCALER*sin(PI*2/3),-2*SCALER);
 			glVertex3f(0,0,3*SCALER);*/
-			glVertex3f(SCALER,0,-SCALER);
-			glVertex3f(-SCALER,0,-SCALER);
-			glVertex3f(0,0,SCALER);
+			glVertex3f(SCALER,0,0);
+			glVertex3f(-SCALER,0,0);
+			glVertex3f(0,8*SCALER,0);
 			
 		
 		glEnd();
@@ -93,31 +93,26 @@ void Boid::compile_vertexes(){
 
 void Boid::draw(){
 	const static Vetor z_axis(0,0,1);
-	Vetor rotation_axis = produto_vetorial(velocidade, z_axis);
+	const static Vetor y_axis(0,1,0);
+	Vetor rotation_axis = produto_vetorial(z_axis, coordenadas);
 	
 	double rotation_angle;
 	
-	if(rotation_axis.norma() == .0){
-		if(velocidade.z < 0){
-			rotation_angle = PI;
-			rotation_axis.y = 1;
-		}
-	} else if(velocidade.norma() != .0){
-		rotation_angle = asin(rotation_axis.norma()/velocidade.norma());
-		
-		if(velocidade.z < .0){
-			rotation_axis.x = -rotation_axis.x;
-			rotation_axis.y = -rotation_axis.y;
-			rotation_angle += PI;
-		}
-	} else {
-		rotation_angle = .0;
-	}
-	
-	
 	glPushMatrix();
-		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
-		glRotated(rotation_angle*180/PI,-rotation_axis.x,rotation_axis.y,rotation_axis.z);
+	glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
+	
+	
+	if(velocidade != Vetor(0,0,0)){	
+		rotation_axis = produto_vetorial(y_axis, velocidade);
+		if(rotation_axis != Vetor(0,0,0)){
+			rotation_angle = asin(rotation_axis.norma()/velocidade.norma());
+			if(velocidade.y < .0){
+				rotation_axis = -rotation_axis;
+				rotation_angle += PI;
+			}
+			glRotated(rotation_angle*180.0/PI,rotation_axis.x,rotation_axis.y,rotation_axis.z);
+		}
+	}
 		
 		glCallList(Boid::boid);
 	glPopMatrix();

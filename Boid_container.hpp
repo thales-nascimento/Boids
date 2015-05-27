@@ -41,7 +41,7 @@ public:
 	
 	void add_boid(double x, double y, double z);
 	void add_boid_rand();
-	void remove_boid();
+	void remove_boid_rand();
 	
 	void designa_lider(unsigned int id);
 	void set_point(double x, double y, double z);
@@ -52,6 +52,7 @@ public:
 	void print_boids();
 	
 	Boid *procurar_boid(unsigned int id);
+	unsigned int get_n_boids();
 	
 };
 
