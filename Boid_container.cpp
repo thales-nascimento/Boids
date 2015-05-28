@@ -2,32 +2,15 @@
 
 bool setpoint_enabled = false;
 
-bool sort_id(Boid a, Boid b){
-	return a.id < b.id;
-}
 
 //acesso aos boids
-Boid* Boid_container::procurar_boid(unsigned int id){
-	boids.sort(sort_id);
-	list<Boid>::iterator i= boids.begin();
-	int inicio = 0;
-	int posicao=0;
-	int meio;
-	int fim = boids.size();
-	while(fim >= inicio){
-		meio = (inicio+fim)/2;
-		advance(i, meio-posicao);
-		posicao=meio;
-		if((*i).id < id){
-			inicio = meio +1;
-		} else if((*i).id > id){
-			fim = meio -1;
-		} else {
-			break;
-		} 
+Boid* Boid_container::operator[](unsigned int i){
+	if(boids.size() <= i)return NULL;
+	else{
+		list<Boid>::iterator it = boids.begin();
+		advance(it, i);
+		return &(*it);
 	}
-	if(inicio > fim)return NULL;
-	return &(*i);
 }
 
 unsigned int Boid_container::get_n_boids(){
@@ -39,7 +22,6 @@ unsigned int Boid_container::get_n_boids(){
 void Boid_container::add_boid(double x, double y, double z){
 	Boid b(x,y,z);
 	boids.push_back(b);
-	Boid::idcont++;
 }
 
 void Boid_container::add_boid_rand(){
@@ -82,7 +64,7 @@ void Boid_container::toggle_setpoint(){
 }
 
 void Boid_container::designa_lider(unsigned int id){
-	lider = procurar_boid(id);
+	lider = (*this)[id];
 }
 
 
@@ -198,5 +180,7 @@ void Boid_container::define_atmosfera(int bottom, int top){
 	min_height = bottom;
 	max_height = top;
 }
+
+
 
 

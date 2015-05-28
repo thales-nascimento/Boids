@@ -9,14 +9,17 @@
 #define OBSERVER_SPEED 8
 
 int n_planetas;
+int planeta_atual = 1;
 Planeta *planeta;
 
-unsigned int id_observado=0;
+unsigned int id_observado=-1;
 Boid* last_boid;
+int lider_atual = -1;
 
 Hud *_hud;
 unsigned int string_camera, string_n_boids, string_boid_observado, string_coordenadas, string_planeta, string_lider;	//identificadores para mudar as strings do hud
 const char* NOMES_PLANETAS[N_PLANETAS] = {"Terra", "Sol", "Marte"};
+
 
 bool observer_pause=false;
 int modo_observacao = FREE_CAMERA;
@@ -45,15 +48,10 @@ void keyboard_generico(unsigned char key){
 		break;
 		case 13: planeta->boid_container.toggle_setpoint();		//ENTER
 		break;
-		case '+': 
-		case '-':{
-			if(key == '+')planeta->boid_container.add_boid_rand();
-			else planeta->boid_container.remove_boid_rand();
-			static char aux[14];
-			memset(aux,0,14);
-			sprintf(aux,"%d Boids",planeta->boid_container.get_n_boids());
-			_hud->set_string(string_n_boids, aux);
-		}break;
+		case '+': planeta->boid_container.add_boid_rand();
+		break;
+		case '-': planeta->boid_container.remove_boid_rand();
+		break;
 	}
 }
 
@@ -115,21 +113,18 @@ void keyboard_third(unsigned char key,int x, int y){
 		case '\t':{
 			if(glutGetModifiers() == GLUT_ACTIVE_SHIFT){
 				if(id_observado == 0){
-					id_observado = Boid::idcont-1;
+					id_observado =  planeta->boid_container.get_n_boids()-1;
 				} else {
 					id_observado--;
 				}
 			} else{
-				if(id_observado == Boid::idcont-1){
+				if(id_observado >= planeta->boid_container.get_n_boids()-1){
 					id_observado = 0;
 				} else {
 					id_observado++;
 				}
 			}
-			static char aux[18];
-			memset(aux,0,14);
-			sprintf(aux, "boid observado: %d", id_observado);
-			_hud->set_string(string_boid_observado, aux);
+			observer_change_mode(modo_observacao);
 		}
 		break;
 		case 'a': theta_geoestacionaria -= .01;
@@ -171,51 +166,47 @@ void active_mouse_unused(int x,int y){}
 
 
 void hud_mouse(int x,int y){
+
+	
 	int acao = _hud->hover_buttons(x,y,true);
 	switch(acao){
-		case BOID_ANTERIOR:
 		case PROXIMO_BOID:{ 
-			if(PROXIMO_BOID){
-				if(id_observado == Boid::idcont-1){
-					id_observado = 0;
-				} else {
-					id_observado++;
-				}
+			if(id_observado >= planeta->boid_container.get_n_boids()-1){
+				id_observado = 0;
 			} else {
-				if(id_observado == 0){
-					id_observado = Boid::idcont-1;
-				} else {
-					id_observado--;
-				}
+				id_observado++;
 			}
-			static char aux[18];
-			memset(aux,0,14);
-			sprintf(aux, "boid observado: %d", id_observado);
-			_hud->set_string(string_boid_observado, aux);
 		}break;
-		case INCREMENTA_BOIDS: keyboard_generico('+');
+		case BOID_ANTERIOR:{
+			if(id_observado == 0){
+				id_observado = planeta->boid_container.get_n_boids()-1;
+			} else {
+				id_observado--;
+			}
+			observer_change_mode(modo_observacao);
+		}break;
+		case INCREMENTA_BOIDS: planeta->boid_container.add_boid_rand();
 		break;
-		case DECREMENTA_BOIDS:keyboard_generico('-');
+		case DECREMENTA_BOIDS: planeta->boid_container.remove_boid_rand();
 		break;
 		case PROXIMA_CAMERA:
 		case CAMERA_ANTERIOR:{
-			static int camera_atual = 1;
+			int ultima_camera = modo_observacao;
 			if(acao == PROXIMA_CAMERA){
-				if(camera_atual == N_CAMERAS){
-					camera_atual = 1;
-				} else camera_atual++;
+				if(ultima_camera == N_CAMERAS){
+					ultima_camera = 1;
+				} else ultima_camera++;
 			} else {
-				if(camera_atual == 1){
-					camera_atual = N_CAMERAS;
-				} else camera_atual--;
+				if(ultima_camera == 1){
+					ultima_camera = N_CAMERAS;
+				} else ultima_camera--;
 			}
-			observer_change_mode(camera_atual);
+			observer_change_mode(ultima_camera);
 		}
 		break;
 		case PROXIMO_PLANETA:
 		case PLANETA_ANTERIOR:{
-			static int planeta_atual = 1;
-			if(PROXIMO_PLANETA){
+			if(acao == PROXIMO_PLANETA){
 				if(planeta_atual == n_planetas){
 					planeta_atual = 1;
 					planeta -= (n_planetas-1);
@@ -233,28 +224,26 @@ void hud_mouse(int x,int y){
 				}
 			}
 			_hud->set_string(string_planeta, (char*)NOMES_PLANETAS[planeta_atual-1]);
+			observer_change_mode(GEO_ESTACIONARIA);
+			id_observado = -1;
+			lider_atual = -1;
+			last_boid = NULL;
 		}break;
-		case PROXIMO_LIDER:
-		case LIDER_ANTERIOR:{
-			static int lider_atual = 0;
-			if(PROXIMO_LIDER){
-				if(lider_atual == planeta->boid_container.get_n_boids()-1){
-					lider_atual = -1;
-				} else {
-					lider_atual++;
-				}
+		case PROXIMO_LIDER:{
+			if(lider_atual >= (int)planeta->boid_container.get_n_boids()){
+				lider_atual = -1;
 			} else {
-				if(lider_atual == -1){
-					lider_atual = planeta->boid_container.get_n_boids()-1;
-				} else {
-					lider_atual--;
-				}
+				lider_atual++;
 			}
 			planeta->boid_container.designa_lider(lider_atual);
-			static char aux[12];
-			memset(aux,0,12);
-			sprintf(aux, "Lider: %d", lider_atual);
-			_hud->set_string(string_lider, aux);
+		}break;
+		case LIDER_ANTERIOR:{
+			if(lider_atual == -1){
+				lider_atual = planeta->boid_container.get_n_boids()-1;
+			} else {
+				lider_atual--;
+			}
+			planeta->boid_container.designa_lider(lider_atual);
 		}break;
 	}
 }
@@ -305,12 +294,7 @@ void observer_look(){
 		case FIRST:
 		case THIRD_SIDE:
 		case THIRD_UP:{			
-			static unsigned int last_id=0;
-			last_boid = planeta->boid_container.procurar_boid(last_id);
-			if(last_id != id_observado){
-				last_id = id_observado;
-				last_boid = planeta->boid_container.procurar_boid(last_id);
-			}
+
 			Vetor centro = planeta->get_coordenadas();
 			Vetor up;
 			
@@ -364,21 +348,30 @@ void observer_look(){
 		}break;
 	}
 	
-	static char aux[3][12];
-	memset(aux[0],0,10);
-	sprintf(aux[2],"X: %i",(int)posicao_observador.x);	
-	sprintf(aux[1],"Y: %i",(int)posicao_observador.y);
-	sprintf(aux[0],"Z: %i",(int)posicao_observador.z);
+	static char aux_xyz[3][12], aux_observado[19], aux_lider[12], aux_n_boids[11];
+	memset(aux_observado,0,19);
+	memset(aux_lider,0,12);
+	memset(aux_xyz,0,36);
+	memset(aux_n_boids,0,11);
 	
-	_hud->set_string(string_coordenadas, aux[0]);
-	_hud->set_string(string_coordenadas+1, aux[1]);
-	_hud->set_string(string_coordenadas+2, aux[2]);
+	sprintf(aux_n_boids, "%d Boids", planeta->boid_container.get_n_boids());
+	sprintf(aux_observado, "boid observado: %d", id_observado);
+	sprintf(aux_lider, "Lider: %d", lider_atual);
+	sprintf(aux_xyz[2],"X: %i",(int)posicao_observador.x);	
+	sprintf(aux_xyz[1],"Y: %i",(int)posicao_observador.y);
+	sprintf(aux_xyz[0],"Z: %i",(int)posicao_observador.z);
+	
+	_hud->set_string(string_n_boids, aux_n_boids);
+	_hud->set_string(string_lider, aux_lider);
+	_hud->set_string(string_boid_observado, aux_observado);
+	_hud->set_string(string_coordenadas, aux_xyz[0]);
+	_hud->set_string(string_coordenadas+1, aux_xyz[1]);
+	_hud->set_string(string_coordenadas+2, aux_xyz[2]);
 	
 	glutPostRedisplay();
 }
 
 void observer_change_mode(int mode){
-	modo_observacao = mode;
 	switch(mode){
 		case FREE_CAMERA:{
 			glutMotionFunc(active_mouse);
@@ -389,9 +382,11 @@ void observer_change_mode(int mode){
 		case FIRST:
 		case THIRD_UP:
 		case THIRD_SIDE:{
-			glutMotionFunc(active_mouse_unused);
-			glutMouseFunc(mouse_third);
-			glutKeyboardFunc(keyboard_third);
+			last_boid = (*planeta).boid_container[id_observado];
+			if(last_boid == NULL){
+				return;
+			}
+			
 			switch(mode){
 				case FIRST: _hud->set_string(string_camera, (char*)"primeira pessoa");
 				break;
@@ -400,6 +395,9 @@ void observer_change_mode(int mode){
 				case THIRD_SIDE: _hud->set_string(string_camera, (char*)"terceira pessoa (lateral)");
 				break;
 			}
+			glutMotionFunc(active_mouse_unused);
+			glutMouseFunc(mouse_third);
+			glutKeyboardFunc(keyboard_third);
 		}break;
 		case GEO_ESTACIONARIA:{
 			glutMotionFunc(active_mouse_unused);
@@ -408,6 +406,7 @@ void observer_change_mode(int mode){
 			_hud->set_string(string_camera, (char*)"geoestacionária");
 		}break;
 	}
+	modo_observacao = mode;
 }
 
 void observer_init(Planeta *planet, int n_planets, Hud *h){

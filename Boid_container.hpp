@@ -7,7 +7,6 @@
 #include <iostream>
 #include <GL/freeglut.h>
 #include <list>
-#include <algorithm>
 #include <cstdlib>
 using namespace std;
 
@@ -45,6 +44,7 @@ public:
 	void add_boid(double x, double y, double z);
 	void add_boid_rand();
 	void remove_boid_rand();
+	Boid* operator[](unsigned int i);
 	
 	void designa_lider(unsigned int id);
 	void toggle_setpoint();
@@ -53,8 +53,8 @@ public:
 	void draw_boids();
 	void print_boids();
 	
-	Boid *procurar_boid(unsigned int id);
 	unsigned int get_n_boids();
+	
 	
 };
 

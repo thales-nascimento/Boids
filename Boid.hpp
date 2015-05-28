@@ -33,7 +33,6 @@ public:
 	
 	Boid();
 	Boid(double x, double y, double z);
-	Boid(Vetor posicao);
 	
 	Vetor get_coordenadas();
 	Vetor get_aceleracao();

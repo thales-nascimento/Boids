@@ -5,25 +5,19 @@ double Boid::ACELERACAO_MAX = .005;
 double Boid::CAMPO_DE_VISAO = 6;
 unsigned int Boid::idcont=0;
 
+
 Boid::Boid(double x, double y, double z): id(idcont){
 	coordenadas[0] = x;
 	coordenadas[1] = y;
 	coordenadas[2] = z;
 	Vetor a(rand(),rand(),rand());
 	mudar_aceleracao(a);
-	Boid();
+	
+	vizinhos_vistos=0;
 	
 }
 
-Boid::Boid(Vetor posicao): id(idcont){
-	coordenadas = posicao;
-	Boid();
-}
-
-
-Boid::Boid(): id(idcont){
-	vizinhos_vistos=0;
-}
+Boid::Boid(): id(idcont){}
 
 
 void Boid::acelerar(){
