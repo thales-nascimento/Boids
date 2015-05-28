@@ -55,8 +55,6 @@ Vetor Boid::get_aceleracao(){
 	return aceleracao;
 }
 
-
-GLuint Boid::boid = 0;
 void Boid::compile_vertexes(){
 	/*Boid::boid = glGenLists(1);
 	glNewList(boid, GL_COMPILE);
@@ -86,30 +84,35 @@ void Boid::compile_vertexes(){
 	InitMesh();
 }
 
+#include <iostream>
+using namespace std;
 void Boid::draw(){
 	const static Vetor z_axis(0,0,1);
 	const static Vetor y_axis(0,1,0);
-	Vetor rotation_axis = produto_vetorial(z_axis, coordenadas);
-	
-	double rotation_angle;
+	Vetor rotation_axis = produto_vetorial(coordenadas, -y_axis);
+	double escalar = produto_escalar(coordenadas, -y_axis);
+		
+	double rotation_angle = asin(rotation_axis.norma()/coordenadas.norma());
+	if(escalar > 0)rotation_angle = -rotation_angle + PI;
 	
 	glPushMatrix();			
 		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
-		glRotated(-90,1,0,0);
+		glRotated(rotation_angle*180.0/PI, rotation_axis.x, rotation_axis.y, rotation_axis.z);
 		
-		if(velocidade != Vetor(0,0,0)){	
-			rotation_axis = produto_vetorial(y_axis, velocidade);
-			if(rotation_axis != Vetor(0,0,0)){
-				rotation_angle = asin(rotation_axis.norma()/velocidade.norma());
-				if(velocidade.y < .0){
-					rotation_axis = -rotation_axis;
-					rotation_angle += PI;
-				}
-				glRotated(rotation_angle*180.0/PI,rotation_axis.x,rotation_axis.y,rotation_axis.z);
-			}
+		if(velocidade != Vetor(0,0,0)){
+			Vetor vel = velocidade;
+			vel.normalizar();
+			Vetor cord = coordenadas;
+			cord.normalizar();
+			rotation_axis.normalizar();
+			Vetor tangente_planeta = vel - projecao_ortogonal(vel,cord);
+			rotation_angle = atan2(produto_vetorial(tangente_planeta, rotation_axis).norma(), produto_escalar(tangente_planeta, rotation_axis)) - PI;
+			
+			//glRotated(rotation_angle*180.0/PI, cord.x,cord.y,cord.z);
+			
 		}
+		
 		DrawMesh(0);
-		//glCallList(Boid::boid);
 	glPopMatrix();
 }
 

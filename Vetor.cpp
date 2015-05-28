@@ -112,7 +112,12 @@ Vetor produto_vetorial(Vetor v, Vetor w){
 	Vetor u(v[1]*w[2] - v[2]*w[1], v[0]*w[2] - v[2]*w[0], v[0]*w[1] - v[1]*w[0]);
 	return u;
 }
+
+Vetor projecao_ortogonal(Vetor v, Vetor w){
+	return (produto_escalar(v,w)/w.norma()/w.norma())*w;
+}
+
 double produto_escalar(Vetor v, Vetor w){
-	return v[0]*w[0] + v[1]*w[1] + v[2]*w[2];
+	return v.x*w.x + v.y*w.y + v.z*w.z;
 }
 

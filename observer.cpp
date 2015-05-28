@@ -12,7 +12,7 @@ int n_planetas;
 int planeta_atual = 1;
 Planeta *planeta;
 
-unsigned int id_observado=-1;
+int id_observado=-1;
 Boid* last_boid;
 int lider_atual = -1;
 
@@ -50,8 +50,33 @@ void keyboard_generico(unsigned char key){
 		break;
 		case '+': planeta->boid_container.add_boid_rand();
 		break;
-		case '-': planeta->boid_container.remove_boid_rand();
-		break;
+		case '-':{
+			planeta->boid_container.remove_boid_rand();
+			if(id_observado >= planeta->boid_container.get_n_boids()){
+				id_observado--;
+				if(id_observado < 0){
+					modo_observacao = GEO_ESTACIONARIA;
+					id_observado = -1;
+				}
+				observer_change_mode(modo_observacao);
+			}
+		}break;
+		case '\t':{
+			if(glutGetModifiers() == GLUT_ACTIVE_SHIFT){			
+				if(id_observado >= planeta->boid_container.get_n_boids()-1){
+					id_observado = 0;
+				} else {
+					id_observado++;
+				}
+			} else {
+				if(id_observado <= 0){
+					id_observado = planeta->boid_container.get_n_boids()-1;
+				} else {
+					id_observado--;
+				}
+			}
+			observer_change_mode(modo_observacao);
+		}break;
 	}
 }
 
@@ -68,7 +93,7 @@ void keyboard_setpoint(int key, int x, int y){
 		break;
 	}
 	
-	planeta->boid_container.set_point(theta,phi, planeta->get_rotation());
+	planeta->boid_container.set_point(theta,phi);
 }
 
 void keyboard_free_camera(unsigned char key,int x, int y){
@@ -110,23 +135,6 @@ void keyboard_third(unsigned char key,int x, int y){
 	switch(key){
 		case 'p': observer_pause = !observer_pause;
 		break;
-		case '\t':{
-			if(glutGetModifiers() == GLUT_ACTIVE_SHIFT){
-				if(id_observado == 0){
-					id_observado =  planeta->boid_container.get_n_boids()-1;
-				} else {
-					id_observado--;
-				}
-			} else{
-				if(id_observado >= planeta->boid_container.get_n_boids()-1){
-					id_observado = 0;
-				} else {
-					id_observado++;
-				}
-			}
-			observer_change_mode(modo_observacao);
-		}
-		break;
 		case 'a': theta_geoestacionaria -= .01;
 		break;
 		case 'd': theta_geoestacionaria += .01;
@@ -165,9 +173,7 @@ void active_mouse(int x, int y){
 void active_mouse_unused(int x,int y){}
 
 
-void hud_mouse(int x,int y){
-
-	
+void hud_mouse(int x,int y){	
 	int acao = _hud->hover_buttons(x,y,true);
 	switch(acao){
 		case PROXIMO_BOID:{ 
@@ -178,7 +184,7 @@ void hud_mouse(int x,int y){
 			}
 		}break;
 		case BOID_ANTERIOR:{
-			if(id_observado == 0){
+			if(id_observado <= 0){
 				id_observado = planeta->boid_container.get_n_boids()-1;
 			} else {
 				id_observado--;
@@ -348,6 +354,9 @@ void observer_look(){
 		}break;
 	}
 	
+		
+	//setando as strings do HUD
+	//os numeros são a quantidade de caracteres necessários definidos empiricamente
 	static char aux_xyz[3][12], aux_observado[19], aux_lider[12], aux_n_boids[11];
 	memset(aux_observado,0,19);
 	memset(aux_lider,0,12);
@@ -371,6 +380,9 @@ void observer_look(){
 	glutPostRedisplay();
 }
 
+
+//mudanca de cameras
+//_________________________________________
 void observer_change_mode(int mode){
 	switch(mode){
 		case FREE_CAMERA:{
@@ -409,6 +421,7 @@ void observer_change_mode(int mode){
 	modo_observacao = mode;
 }
 
+//inicializacao e criacao do HUD
 void observer_init(Planeta *planet, int n_planets, Hud *h){
 	n_planetas = n_planets;
 	planeta = planet;
@@ -420,9 +433,9 @@ void observer_init(Planeta *planet, int n_planets, Hud *h){
 	string_planeta = _hud->add_string(4,11,(char*)NOMES_PLANETAS[0]);
 	string_lider = _hud->add_string(4,14,(char*)"Lider: ");
 	
-	string_coordenadas = _hud->add_string(2,17,(char*)"Z: ");
-	_hud->add_string(2,20,(char*)"Y: ");
-	_hud->add_string(2,23,(char*)"X: ");
+	string_coordenadas = _hud->add_string(1,17,(char*)"Z: ");
+	_hud->add_string(1,20,(char*)"Y: ");
+	_hud->add_string(1,23,(char*)"X: ");
 	
 	static char* larrow = (char*)"<";
 	static char* rarrow = (char*)">";

@@ -22,6 +22,10 @@ enum planets {terra=0,sol,marte};
 Hud hud(WINDOW_WIDTH,WINDOW_HEIGHT);
 
 void draw_scene(){
+	
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+	
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glViewport (0,0, window_width, window_height); 
@@ -37,6 +41,7 @@ void draw_scene(){
 		
 	glPopMatrix();
 	hud.draw();
+	
 	
 	glutSwapBuffers();
 }
@@ -68,6 +73,7 @@ void boids_main_loop(int value){
 	
 }
 
+
 int main(int argc, char**argv){
 
 	glutInit(&argc, argv);
@@ -79,7 +85,32 @@ int main(int argc, char**argv){
 	glutReshapeFunc(reshape);
 	glutTimerFunc(60, boids_main_loop, 1);
 	
+	
+	
+	
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+	const float luz_difuse[] = {1, .5f, .5f, 0};
+	const float position[] = {0,.0,.0,0};
+	const float mat_difuse[] = {0.5,0.5,0.5,0};
+	const float luz_ambient[] = {0.1,0.1,0.2,0};
+	const float ZERO[] = {.0,.0,.0,.0};
+	
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ZERO);
+	
+	glLightfv(GL_LIGHT0, GL_AMBIENT, luz_ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, luz_difuse);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ZERO);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_difuse);
+	
+	
+	
+	
 	
 	glViewport(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
 	glFrustum(-.25,.25,-.125,.125,1,DIST_TERRA_SOL  + RAIO_SOL);

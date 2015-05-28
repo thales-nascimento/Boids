@@ -53,9 +53,9 @@ void Boid_container::liderar(){
 	}
 }
 
-void Boid_container::set_point(double theta, double phi, double rotacao){
+void Boid_container::set_point(double theta, double phi){
 	setpoint = Vetor((min_height + max_height)/2*cos(phi),(min_height + max_height)/2*sin(phi),0);
-	setpoint.rotacionar_em_y(theta + rotacao);
+	setpoint.rotacionar_em_y(theta);
 	
 }
 

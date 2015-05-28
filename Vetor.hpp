@@ -37,6 +37,7 @@ void operator -=(Vetor& v, Vetor w);
 void operator *=(Vetor& v, double k);
 
 Vetor produto_vetorial(Vetor v, Vetor w);
+Vetor projecao_ortogonal(Vetor v, Vetor w);
 double produto_escalar(Vetor v, Vetor w);
 
 

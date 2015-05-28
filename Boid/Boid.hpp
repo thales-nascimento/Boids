@@ -5,11 +5,11 @@ extern "C"{
 #include "blender_model_importer.h"
 }
 
-#include "Vetor.hpp"
+#include "../esfera.h"
+#include "../Vetor.hpp"
 #include <GL/gl.h>
 #include <cmath>
 #include <cstdlib>
-#include "esfera.h"
 #define SCALER 0.25
 
 class Planeta;
@@ -38,7 +38,6 @@ public:
 	Vetor get_aceleracao();
 	Vetor get_velocidade();	
 	
-	static GLuint boid;	//variavel que armazena o identificador da lista de vértices do boid
 	static void compile_vertexes();
 	void draw();
 	

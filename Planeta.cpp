@@ -46,7 +46,7 @@ void Planeta::compile_vertexes(){
 
 void Planeta::draw(){
 	
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINES );	
+	glPolygonMode(GL_FRONT, GL_FILL );	
 	
 	glPushMatrix();
 		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
@@ -55,10 +55,10 @@ void Planeta::draw(){
 		glRotated(angulo_rotacao*180/PI, 0,1,0);
 		boid_container.draw_boids();
 		
-		glScalef(RAIO,RAIO,RAIO);
+		glColor3ubv(color);
+		glutSolidSphere(RAIO,20,20);
 		glColor3ubv(color);
 		
-		glCallList(esfera);
 	glPopMatrix();
 }
 

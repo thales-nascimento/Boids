@@ -7,7 +7,7 @@ Vetor.o:
 	$(CC) -c -o Vetor.o Vetor.cpp
 
 Boid.o:
-	$(CC) -c -o Boid.o Boid.cpp
+	$(CC) -c -o Boid.o Boid/Boid.cpp
 	
 Boid_container.o:
 	$(CC) -c -o Boid_container.o Boid_container.cpp
@@ -22,7 +22,7 @@ Hud.o:
 	$(CC) -c -o Hud.o HUD/Hud.cpp
 	
 blender_model_importer.o:
-	gcc -c -o blender_model_importer.o blender_model_importer.c
+	gcc -c -o blender_model_importer.o Boid/blender_model_importer.c
 	
 clear:
 	rm *.o boids

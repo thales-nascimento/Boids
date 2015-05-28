@@ -1,0 +1,22 @@
+os controles são:
+
+1 - camera livre:
+cs-like (WASD e mouse)
+rodinha do mouse tem o mesmo efeito de WS
+RF (up down)
+
+2,3, - camera em terceira pessoa
+WS, rodinha do mouse para afastar e aproximar
+[TAB] trocar de boid +
+[TAB] + capslook trocar de boid -
+
+4 - camera geoestacionaria
+WS, rodinha do mouse para afastar e aproximar
+A e D para deslocar longitunalmente
+
+
+genericos:
+12345 trocar de camera. Cameras 2,3,5 requerem um boid selecionado.
++- adiciona e remove boid
+[ENTER] habilitar/desabilitar setpoint do boid lider
+[ARROW_KEYS] mover setpoint

@@ -1,7 +1,7 @@
 #ifndef __BOID_CONTAINER_HPP__
 #define __BOID_CONTAINER_HPP__
 
-#include "Boid.hpp"
+#include "Boid/Boid.hpp"
 #include "esfera.h"
 
 #include <iostream>
@@ -11,7 +11,7 @@
 using namespace std;
 
 //constantes das forças atuantes nos boids
-#define K_COESAO 3
+#define K_COESAO 1.5
 #define K_REPULSAO 1.5
 #define K_ALINHAMENTO 7.0
 #define K_LIDERANCA 1
@@ -37,7 +37,7 @@ private:
 	
 public:	
 
-	void set_point(double theta, double phi, double rotacao);
+	void set_point(double theta, double phi);
 
 	void define_atmosfera(int bottom, int top);
 	
