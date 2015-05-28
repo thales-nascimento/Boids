@@ -26,6 +26,7 @@ Boid* Boid_container::procurar_boid(unsigned int id){
 			break;
 		} 
 	}
+	if(inicio > fim)return NULL;
 	return &(*i);
 }
 
@@ -58,15 +59,13 @@ void Boid_container::remove_boid_rand(){
 	
 }
 
-void Boid_container::designa_lider(unsigned int id){
-	lider = procurar_boid(id);
-}
 
 //lideranca
 
 void Boid_container::liderar(){
 	if(setpoint_enabled && lider != NULL){
 		Vetor direcionamento = setpoint - lider->get_coordenadas();
+		direcionamento.normalizar();
 		direcionamento *= K_DIRECIONAMENTO;
 		lider->mudar_aceleracao(direcionamento);
 	}
@@ -80,6 +79,10 @@ void Boid_container::set_point(double theta, double phi, double rotacao){
 
 void Boid_container::toggle_setpoint(){
 	setpoint_enabled = !setpoint_enabled;
+}
+
+void Boid_container::designa_lider(unsigned int id){
+	lider = procurar_boid(id);
 }
 
 

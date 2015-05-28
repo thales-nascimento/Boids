@@ -23,4 +23,6 @@
 
 #define PI 3.14159265358979
 
+#define N_PLANETAS 3
+
 #endif

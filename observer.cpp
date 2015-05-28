@@ -8,13 +8,15 @@
 #define FIRST 5
 #define OBSERVER_SPEED 8
 
+int n_planetas;
 Planeta *planeta;
 
 unsigned int id_observado=0;
 Boid* last_boid;
 
 Hud *_hud;
-unsigned int string_camera, string_n_boids, string_boid_observado, string_coordenadas;
+unsigned int string_camera, string_n_boids, string_boid_observado, string_coordenadas, string_planeta, string_lider;	//identificadores para mudar as strings do hud
+const char* NOMES_PLANETAS[N_PLANETAS] = {"Terra", "Sol", "Marte"};
 
 bool observer_pause=false;
 int modo_observacao = FREE_CAMERA;
@@ -170,7 +172,6 @@ void active_mouse_unused(int x,int y){}
 
 void hud_mouse(int x,int y){
 	int acao = _hud->hover_buttons(x,y,true);
-	cout<<acao;
 	switch(acao){
 		case BOID_ANTERIOR:
 		case PROXIMO_BOID:{ 
@@ -198,7 +199,7 @@ void hud_mouse(int x,int y){
 		break;
 		case PROXIMA_CAMERA:
 		case CAMERA_ANTERIOR:{
-			static int camera_atual = 0;
+			static int camera_atual = 1;
 			if(acao == PROXIMA_CAMERA){
 				if(camera_atual == N_CAMERAS){
 					camera_atual = 1;
@@ -211,6 +212,50 @@ void hud_mouse(int x,int y){
 			observer_change_mode(camera_atual);
 		}
 		break;
+		case PROXIMO_PLANETA:
+		case PLANETA_ANTERIOR:{
+			static int planeta_atual = 1;
+			if(PROXIMO_PLANETA){
+				if(planeta_atual == n_planetas){
+					planeta_atual = 1;
+					planeta -= (n_planetas-1);
+				} else {
+					planeta++;
+					planeta_atual++;
+				}
+			} else {
+				if(planeta_atual == 1){
+					planeta_atual = n_planetas;
+					planeta += (n_planetas-1);
+				} else {
+					planeta--;
+					planeta_atual--;
+				}
+			}
+			_hud->set_string(string_planeta, (char*)NOMES_PLANETAS[planeta_atual-1]);
+		}break;
+		case PROXIMO_LIDER:
+		case LIDER_ANTERIOR:{
+			static int lider_atual = 0;
+			if(PROXIMO_LIDER){
+				if(lider_atual == planeta->boid_container.get_n_boids()-1){
+					lider_atual = -1;
+				} else {
+					lider_atual++;
+				}
+			} else {
+				if(lider_atual == -1){
+					lider_atual = planeta->boid_container.get_n_boids()-1;
+				} else {
+					lider_atual--;
+				}
+			}
+			planeta->boid_container.designa_lider(lider_atual);
+			static char aux[12];
+			memset(aux,0,12);
+			sprintf(aux, "Lider: %d", lider_atual);
+			_hud->set_string(string_lider, aux);
+		}break;
 	}
 }
 
@@ -306,7 +351,7 @@ void observer_look(){
 		}break;
 		case GEO_ESTACIONARIA:{
 			double rotacao = planeta->get_rotation();
-			posicao_observador = Vetor(distancia_terceira_pessoa,0,0);
+			posicao_observador = Vetor(distancia_terceira_pessoa + planeta->RAIO,0,0);
 			posicao_observador.rotacionar_em_y(-rotacao + theta_geoestacionaria);
 			posicao_observador.rotacionar_em_x(planeta->INCLINACAO_ROT);
 			
@@ -365,18 +410,29 @@ void observer_change_mode(int mode){
 	}
 }
 
-void observer_init(Planeta *planet, Hud *h){
+void observer_init(Planeta *planet, int n_planets, Hud *h){
+	n_planetas = n_planets;
+	planeta = planet;
 	
 	_hud = h;	
 	string_boid_observado = _hud->add_string(4,2,(char*)"boid observado: ");
 	string_camera = _hud->add_string(4,5,(char*)"camera: ");
 	string_n_boids = _hud->add_string(4,8,(char*)"N Boids");
-	string_coordenadas = _hud->add_string(4,11,(char*)"Z: ");
-	_hud->add_string(4,14,(char*)"Y: ");
-	_hud->add_string(4,17,(char*)"X: ");
-	_hud->add_button(1,2,BOID_ANTERIOR,(char*)"<");_hud->add_button(2,2,PROXIMO_BOID,(char*)">");
-	_hud->add_button(1,5,CAMERA_ANTERIOR,(char*)"<");_hud->add_button(2,5,PROXIMA_CAMERA,(char*)">");
-	_hud->add_button(1,8,DECREMENTA_BOIDS,(char*)"<");_hud->add_button(2,8,INCREMENTA_BOIDS,(char*)">");
+	string_planeta = _hud->add_string(4,11,(char*)NOMES_PLANETAS[0]);
+	string_lider = _hud->add_string(4,14,(char*)"Lider: ");
+	
+	string_coordenadas = _hud->add_string(2,17,(char*)"Z: ");
+	_hud->add_string(2,20,(char*)"Y: ");
+	_hud->add_string(2,23,(char*)"X: ");
+	
+	static char* larrow = (char*)"<";
+	static char* rarrow = (char*)">";
+	_hud->add_button(1,2,BOID_ANTERIOR,larrow);		_hud->add_button(2,2,PROXIMO_BOID,rarrow);
+	_hud->add_button(1,5,CAMERA_ANTERIOR,larrow);	_hud->add_button(2,5,PROXIMA_CAMERA,rarrow);
+	_hud->add_button(1,8,DECREMENTA_BOIDS,larrow);	_hud->add_button(2,8,INCREMENTA_BOIDS,rarrow);
+	_hud->add_button(1,11,PLANETA_ANTERIOR,larrow);	_hud->add_button(2,11,PROXIMO_PLANETA,rarrow);
+	_hud->add_button(1,14,LIDER_ANTERIOR,larrow);	_hud->add_button(2,14,PROXIMO_LIDER,rarrow);
+	
 	
 	glutPassiveMotionFunc(passive_mouse);
 	glutSpecialFunc(keyboard_setpoint);
@@ -384,7 +440,6 @@ void observer_init(Planeta *planet, Hud *h){
 	posicao_observador = planet->get_coordenadas();
 	posicao_observador.z -=  planet->RAIO*2;
 	theta_free += PI/2;
-	planeta = planet;
 	
 
 }

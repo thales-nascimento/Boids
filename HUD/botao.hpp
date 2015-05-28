@@ -14,6 +14,10 @@
 #define BOID_ANTERIOR -2
 #define PROXIMA_CAMERA 3
 #define CAMERA_ANTERIOR -3
+#define PLANETA_ANTERIOR -4
+#define PROXIMO_PLANETA 4
+#define PROXIMO_LIDER 5
+#define LIDER_ANTERIOR -5
 
 
 class botao{
