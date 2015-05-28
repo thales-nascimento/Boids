@@ -37,6 +37,9 @@ private:
 	int min_height;
 	
 public:	
+
+	void set_point(double theta, double phi, double rotacao);
+
 	void define_atmosfera(int bottom, int top);
 	
 	void add_boid(double x, double y, double z);
@@ -44,7 +47,6 @@ public:
 	void remove_boid_rand();
 	
 	void designa_lider(unsigned int id);
-	void set_point(double theta, double phi, double rotacao);
 	void toggle_setpoint();
 	
 	void refresh_boids();
