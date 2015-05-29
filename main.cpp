@@ -14,25 +14,35 @@ double window_width = WINDOW_WIDTH;
 Planeta planetas[N_PLANETAS] = {
 		Planeta(INCLINACAO_TERRA, PERIODO_ROT_TERRA, PERIODO_TRANS_TERRA, GRAVIDADE_TERRA, RAIO_TERRA, DIST_TERRA_SOL),
 		Planeta(0,PERIODO_ROT_SOL,1,-1,RAIO_SOL,0),
-		Planeta(INCLINACAO_MARTE, PERIODO_ROT_MARTE, PERIODO_TRANS_MARTE, GRAVIDADE_MARTE, RAIO_MARTE, DIST_MARTE_SOL)
+		Planeta(INCLINACAO_MARTE, PERIODO_ROT_MARTE, PERIODO_TRANS_MARTE, GRAVIDADE_MARTE, RAIO_MARTE, DIST_MARTE_SOL),
+		
+		Planeta(INCLINACAO_MERCURIO, PERIODO_ROT_MERCURIO, PERIODO_TRANS_MERCURIO, GRAVIDADE_MERCURIO, RAIO_MERCURIO, DIST_MERCURIO_SOL),
+		Planeta(INCLINACAO_VENUS, PERIODO_ROT_VENUS, PERIODO_TRANS_VENUS, GRAVIDADE_VENUS, RAIO_VENUS, DIST_VENUS_SOL ),
+		Planeta(INCLINACAO_JUPITER, PERIODO_ROT_JUPITER, PERIODO_TRANS_JUPITER, GRAVIDADE_JUPITER, RAIO_JUPITER, DIST_JUPITER_SOL),
 		};
-enum planets {terra=0,sol,marte};
+enum planets {terra=0,sol,marte,mercurio,venus,jupiter};
 
 
 Hud hud(WINDOW_WIDTH,WINDOW_HEIGHT);
 
 void draw_scene(){
 		
-	const float position[] = {-100,.0,.0,1};
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	
 	glLoadIdentity();
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	observer_look();
+	glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glFrustum(-.25,.25,-.125,.125,1,DIST_TERRA_SOL  + RAIO_SOL);		
+		observer_look();
+	glMatrixMode(GL_MODELVIEW);
 	
-	for(int i=0;i<N_PLANETAS;i++){
-		glColor3ub(0xff,0xff,0);
+	const float position[] = {.0,.0,.0,1};
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+	glDisable(GL_LIGHTING);
+	planetas[0].draw();
+	glEnable(GL_LIGHTING);
+	for(int i=terra;i<N_PLANETAS;i++){
 		planetas[i].draw();
 	}
 		
@@ -41,16 +51,6 @@ void draw_scene(){
 	glutSwapBuffers();
 }
 
-void reshape (int w, int h){
-	double ratio = (double)w/(double)h;
-	window_height = h;
-	window_width = w/ratio*2;
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glViewport (0,0, window_width, window_height); 
-	glPushMatrix();
-	glMatrixMode(GL_MODELVIEW);
-}
 
 void boids_main_loop(int value){
 	if(value || observer_pause){
@@ -76,7 +76,7 @@ int main(int argc, char**argv){
 	glutCreateWindow("boids");
 	
 	glutDisplayFunc(draw_scene);
-	glutReshapeFunc(reshape);
+	//glutReshapeFunc(reshape);
 	glutTimerFunc(60, boids_main_loop, 1);
 	
 	
@@ -86,17 +86,14 @@ int main(int argc, char**argv){
 	glEnable(GL_LIGHT0);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
-	//glEnable(GL_LIGHTING);
-	const float luz_difuse[] = {1, .5f, .5f, 0};
-	const float mat_difuse[] = {0.5,0.5,0.5,0};
-	const float luz_ambient[] = {0.1,0.1,0.2,0};
+	glEnable(GL_LIGHTING);
+	const float luz_difuse[] = {.6, .6, .5, 0};
+	const float mat_difuse[] = {1,1,1,0};
 	const float ZERO[] = {.0,.0,.0,.0};
 	
-	glLightfv(GL_LIGHT0, GL_AMBIENT, luz_ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, luz_difuse);
-	
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ZERO);        // Luz ambiente global
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_difuse);
-	
 	
 	
 	glMatrixMode(GL_PROJECTION);
@@ -113,6 +110,7 @@ int main(int argc, char**argv){
 	planetas[terra].change_color(0x79,0x79,0xff);
 	planetas[marte].change_color(0xff,0x79,0x79);
 	planetas[sol].change_color(0xff,0xff,0x79);
+	planetas[terra].change_color(0xff,0xff,0x79);
 
 	
 	for(int i=0;i<100;i++){

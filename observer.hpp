@@ -12,7 +12,6 @@
 
 extern bool observer_pause;
 
-
 void observer_look();
 void observer_init(Planeta *e, int n_planetas, Hud *h);
 

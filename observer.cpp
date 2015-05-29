@@ -18,7 +18,7 @@ int lider_atual = -1;
 
 Hud *_hud;
 unsigned int string_camera, string_n_boids, string_boid_observado, string_coordenadas, string_planeta, string_lider;	//identificadores para mudar as strings do hud
-const char* NOMES_PLANETAS[N_PLANETAS] = {"Terra", "Sol", "Marte"};
+const char* NOMES_PLANETAS[N_PLANETAS] = {"Terra", "Sol", "Marte", "Mercurio", "Venus", "Jupiter"};
 
 
 bool observer_pause=false;
@@ -52,6 +52,19 @@ void keyboard_generico(unsigned char key){
 		break;
 		case 'D': Boid::model = !Boid::model;
 		break;
+		case 'l':{
+			static float luz_ambient[] = {0,0,0,0};
+			static bool comutador = true;
+			if(comutador){
+				luz_ambient[0] = luz_ambient[1] = .2;
+				luz_ambient[2] = .15;
+			} else {
+				luz_ambient[0] = luz_ambient[1] = luz_ambient[2] = 0;
+			}
+			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luz_ambient);
+			comutador = !comutador;
+			
+		}break;
 		case '-':{
 			planeta->boid_container.remove_boid_rand();
 			if(id_observado >= planeta->boid_container.get_n_boids()){

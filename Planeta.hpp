@@ -23,8 +23,8 @@ private:
 	
 	Vetor coordenadas;
 public:
-	const unsigned int PERIODO_ROTACAO;
-	const unsigned int PERIODO_TRANSLACAO;
+	const float PERIODO_ROTACAO;
+	const float PERIODO_TRANSLACAO;
 	const double INCLINACAO_ROT;
 	const double K_GRAVIDADE;
 	const unsigned int RAIO;
@@ -40,7 +40,7 @@ public:
 	double get_rotation();
 	Vetor get_coordenadas();
 	
-	Planeta(double inclinacao_rotacao, unsigned int periodo_rotacao, unsigned int periodo_translacao, double constante_gravidade, unsigned int raio, int distancia_centro);
+	Planeta(double inclinacao_rotacao, float periodo_rotacao, float periodo_translacao, double constante_gravidade, unsigned int raio, int distancia_centro);
 
 	
 };

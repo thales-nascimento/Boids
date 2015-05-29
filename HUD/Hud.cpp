@@ -58,7 +58,7 @@ void Hud::draw(){
 	glMatrixMode(GL_MODELVIEW);
 	
 	glLoadIdentity();
-	
+	glDisable(GL_LIGHTING);
 	for(int i=0;i<botoes.size();i++){
 		switch(botoes[i].status){
 			case BOTAO_SELECIONADO: glColor3ub(botoes[i].hover_r,botoes[i].hover_g,botoes[i].hover_b);
@@ -88,4 +88,5 @@ void Hud::draw(){
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	
+	glEnable(GL_LIGHTING);
 }

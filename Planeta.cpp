@@ -24,7 +24,6 @@ void Planeta::refresh(){
 
 void Planeta::draw(){
 	
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE );	
 	
 	glPushMatrix();
 		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
@@ -68,7 +67,7 @@ Vetor Planeta::get_coordenadas(){
 	return coordenadas;
 }
 
-Planeta::Planeta(double inclinacao_rotacao, unsigned int periodo_rotacao, unsigned int periodo_translacao, double constante_gravidade, unsigned int raio, int distancia_centro):
+Planeta::Planeta(double inclinacao_rotacao, float periodo_rotacao, float periodo_translacao, double constante_gravidade, unsigned int raio, int distancia_centro):
 	PERIODO_ROTACAO(periodo_rotacao),
 	PERIODO_TRANSLACAO(periodo_translacao),
 	INCLINACAO_ROT(inclinacao_rotacao),
