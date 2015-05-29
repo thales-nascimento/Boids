@@ -15,7 +15,6 @@ Planeta planetas[N_PLANETAS] = {
 		Planeta(INCLINACAO_TERRA, PERIODO_ROT_TERRA, PERIODO_TRANS_TERRA, GRAVIDADE_TERRA, RAIO_TERRA, DIST_TERRA_SOL),
 		Planeta(0,PERIODO_ROT_SOL,1,-1,RAIO_SOL,0),
 		Planeta(INCLINACAO_MARTE, PERIODO_ROT_MARTE, PERIODO_TRANS_MARTE, GRAVIDADE_MARTE, RAIO_MARTE, DIST_MARTE_SOL),
-		
 		Planeta(INCLINACAO_MERCURIO, PERIODO_ROT_MERCURIO, PERIODO_TRANS_MERCURIO, GRAVIDADE_MERCURIO, RAIO_MERCURIO, DIST_MERCURIO_SOL),
 		Planeta(INCLINACAO_VENUS, PERIODO_ROT_VENUS, PERIODO_TRANS_VENUS, GRAVIDADE_VENUS, RAIO_VENUS, DIST_VENUS_SOL ),
 		Planeta(INCLINACAO_JUPITER, PERIODO_ROT_JUPITER, PERIODO_TRANS_JUPITER, GRAVIDADE_JUPITER, RAIO_JUPITER, DIST_JUPITER_SOL),
@@ -40,9 +39,10 @@ void draw_scene(){
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
 	glDisable(GL_LIGHTING);
-	planetas[0].draw();
+	planetas[sol].draw();
 	glEnable(GL_LIGHTING);
-	for(int i=terra;i<N_PLANETAS;i++){
+	planetas[terra].draw();
+	for(int i=marte;i<N_PLANETAS;i++){
 		planetas[i].draw();
 	}
 		
@@ -110,8 +110,9 @@ int main(int argc, char**argv){
 	planetas[terra].change_color(0x79,0x79,0xff);
 	planetas[marte].change_color(0xff,0x79,0x79);
 	planetas[sol].change_color(0xff,0xff,0x79);
-	planetas[terra].change_color(0xff,0xff,0x79);
-
+	planetas[mercurio].change_color(0x50,0x47,0x40);
+	planetas[venus].change_color(0x77,0x29,0x05);
+	planetas[jupiter].change_color(0xff,0xe5,0xbe);
 	
 	for(int i=0;i<100;i++){
 		planetas[terra].boid_container.add_boid_rand();
