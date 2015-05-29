@@ -21,32 +21,10 @@ void Planeta::refresh(){
 	boid_container.refresh_boids();
 }
 
-GLuint Planeta::esfera=0;
-void Planeta::compile_vertexes(){
-	esfera = glGenLists(1);
-	
-	glNewList(esfera, GL_COMPILE);
-		glBegin(GL_QUADS);
-			double phi=0, theta=0;
-			for(int i=0;i<LATITUDES;i++){
-				for(int j=0;j<LONGITUDES-1;j++){
-					glVertex3d(cos(phi)*cos(theta), sin(phi) ,cos(phi)*sin(theta));
-					theta += (PI*2/LATITUDES);
-					glVertex3d(cos(phi)*cos(theta), sin(phi) ,cos(phi)*sin(theta));
-					phi += (PI*2/LONGITUDES);
-					glVertex3d(cos(phi)*cos(theta), sin(phi) ,cos(phi)*sin(theta));
-					theta -= (PI*2/LATITUDES);				
-					glVertex3d(cos(phi)*cos(theta), sin(phi) ,cos(phi)*sin(theta));
-				}
-				theta += (PI*2/LATITUDES);
-			}
-		glEnd();
-	glEndList();
-}
 
 void Planeta::draw(){
 	
-	glPolygonMode(GL_FRONT, GL_FILL );	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE );	
 	
 	glPushMatrix();
 		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
@@ -56,8 +34,8 @@ void Planeta::draw(){
 		boid_container.draw_boids();
 		
 		glColor3ubv(color);
+		glRotated(-90,1,0,0);
 		glutSolidSphere(RAIO,20,20);
-		glColor3ubv(color);
 		
 	glPopMatrix();
 }

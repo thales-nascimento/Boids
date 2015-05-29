@@ -89,28 +89,29 @@ using namespace std;
 void Boid::draw(){
 	const static Vetor z_axis(0,0,1);
 	const static Vetor y_axis(0,1,0);
-	Vetor rotation_axis = produto_vetorial(coordenadas, -y_axis);
-	double escalar = produto_escalar(coordenadas, -y_axis);
-		
-	double rotation_angle = asin(rotation_axis.norma()/coordenadas.norma());
-	if(escalar > 0)rotation_angle = -rotation_angle + PI;
-	
-	glPushMatrix();			
+	glPushMatrix();	
 		glTranslated(coordenadas.x, coordenadas.y, coordenadas.z);
-		glRotated(rotation_angle*180.0/PI, rotation_axis.x, rotation_axis.y, rotation_axis.z);
-		
-		if(velocidade != Vetor(0,0,0)){
-			Vetor vel = velocidade;
-			vel.normalizar();
-			Vetor cord = coordenadas;
-			cord.normalizar();
-			rotation_axis.normalizar();
-			Vetor tangente_planeta = vel - projecao_ortogonal(vel,cord);
-			rotation_angle = atan2(produto_vetorial(tangente_planeta, rotation_axis).norma(), produto_escalar(tangente_planeta, rotation_axis)) - PI;
-			
-			//glRotated(rotation_angle*180.0/PI, cord.x,cord.y,cord.z);
-			
+		Vetor rotation_axis;
+		double rotation_angle, escalar;
+		if(velocidade.norma() > .001){	
+			rotation_axis = produto_vetorial(velocidade, z_axis);
+			if(rotation_axis.norma() > .001){
+				rotation_angle = asin(rotation_axis.norma()/velocidade.norma());
+				escalar = produto_escalar(velocidade, z_axis);
+				if(escalar < .0){
+					rotation_angle = -rotation_angle + PI;
+				}
+				glRotated(rotation_angle*180.0/PI,rotation_axis.x,rotation_axis.y,rotation_axis.z);
+			}
 		}
+		
+		rotation_axis = produto_vetorial(coordenadas, -y_axis);
+		escalar = produto_escalar(coordenadas, -y_axis);
+		
+		rotation_angle = asin(rotation_axis.norma()/coordenadas.norma());
+		if(escalar > 0)rotation_angle = -rotation_angle + PI;
+			
+		glRotated(rotation_angle*180.0/PI, rotation_axis.x, rotation_axis.y, rotation_axis.z);
 		
 		DrawMesh(0);
 	glPopMatrix();

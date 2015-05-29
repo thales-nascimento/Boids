@@ -23,8 +23,6 @@ Hud hud(WINDOW_WIDTH,WINDOW_HEIGHT);
 
 void draw_scene(){
 	
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
-	
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -92,7 +90,7 @@ int main(int argc, char**argv){
 	glEnable(GL_LIGHT0);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHTING);
 	const float luz_difuse[] = {1, .5f, .5f, 0};
 	const float position[] = {0,.0,.0,0};
 	const float mat_difuse[] = {0.5,0.5,0.5,0};
@@ -119,7 +117,6 @@ int main(int argc, char**argv){
 	
 	observer_init(planetas, N_PLANETAS, &hud);
 	Boid::compile_vertexes();
-	Planeta::compile_vertexes();
 	planetas[terra].change_color(0x79,0x79,0xff);
 	planetas[marte].change_color(0xff,0x79,0x79);
 	planetas[sol].change_color(0xff,0xff,0x79);

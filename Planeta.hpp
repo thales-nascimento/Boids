@@ -31,8 +31,6 @@ public:
 
 	Boid_container boid_container;
 
-	static GLuint esfera;
-	static void compile_vertexes();
 	void draw();
 	void draw_axis();
 	void change_color(unsigned char, unsigned char, unsigned char);
