@@ -1,2 +1,5 @@
 no inicio da criação do programa, surgiu um problema: como impedir que os boids saiam da área delimitada para eles? A solução encontrada foi criar um planeta, que exercesse gravidade sobre eles, e portanto impedira-os de sairem. Por ter ficado bonito, o Mundo foi expandido, tentando imitar o sistema solar.
-	Os planetas [apenas Terra e Marte :( ] fazem orbitas circulares ao redor do sol e rotacionam em seu próprio eixo inclinado. Os boids são pertencentes a um planeta, logo são desenhados hierarquicamente junto com aquele. Os boids de um planeta não interagem com os de outro.
+	Os planetas que foram implementados fazem orbitas circulares ao redor do sol e rotacionam em seu próprio eixo inclinado. Os boids são pertencentes a um planeta, logo são desenhados hierarquicamente junto com aquele. Os boids de um planeta não interagem com os de outro.
+	O Modelo do Boid é um ironman :) 
+	
+	

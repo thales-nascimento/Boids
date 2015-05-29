@@ -20,3 +20,5 @@ genericos:
 +- adiciona e remove boid
 [ENTER] habilitar/desabilitar setpoint do boid lider
 [ARROW_KEYS] mover setpoint
+l liga/desliga luz ambiente
+D muda o troca/destroca dos boids 
