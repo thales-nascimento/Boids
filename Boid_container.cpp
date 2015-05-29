@@ -96,7 +96,7 @@ void Boid_container::refresh_boids(){
 			Vetor distancia = (*boid_atuante)->get_coordenadas() - (*boid_atual).get_coordenadas();
 			double norma = distancia.norma();
 			coesao += distancia;
-			repulsao -= (1.0/norma/norma)*distancia;
+			repulsao -= (1.0/norma/norma/norma)*distancia;
 			alinhamento += norma*(*boid_atuante)->get_velocidade();
 		}
 		
@@ -150,8 +150,9 @@ void Boid_container::print_boids(){
 
 void Boid_container::draw_boids(){
 	if(lider != NULL){
-		glColor3ub(0xff,0xff,0);
+		glColor3ub(0xd1,0xae,30);
 		(*lider).draw();
+		
 		if(setpoint_enabled){
 			glPushMatrix();
 				glTranslated(setpoint.x,setpoint.y,setpoint.z);
@@ -166,7 +167,7 @@ void Boid_container::draw_boids(){
 			glPopMatrix();
 		}
 	}
-	glColor3ub(0xff,0,0xff);
+	glColor3ub(0x98,0x06,06);
 	for(list<Boid>::iterator atual = boids.begin(); atual != boids.end(); ++atual){
 		(*atual).draw();
 	}

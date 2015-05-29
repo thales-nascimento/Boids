@@ -16,7 +16,6 @@ private:
 	
 public:
 	Hud(double w, double h);
-	void resize(double w, double h);
 
 	unsigned int add_string(float x0, float y0, char* s);
 	void set_string(unsigned int posicao, char* novo_texto);

@@ -22,6 +22,7 @@ void Vetor::normalizar(){
 }
 
 void Vetor::rotacionar_em_x(double angulo){
+	//retirado de http://www.j3d.org/matrix_faq/matrfaq_latest.html
 	double Y,Z;
 	Y = cos(angulo)*y - sin(angulo)*z;
 	Z = sin(angulo)*y + cos(angulo)*z;
@@ -30,6 +31,7 @@ void Vetor::rotacionar_em_x(double angulo){
 }
 
 void Vetor::rotacionar_em_y(double angulo){
+	//retirado de http://www.j3d.org/matrix_faq/matrfaq_latest.html
 	double X,Z;
 	X = cos(angulo)*x - sin(angulo)*z;
 	Z = sin(angulo)*x + cos(angulo)*z;
@@ -38,12 +40,14 @@ void Vetor::rotacionar_em_y(double angulo){
 }
 
 void Vetor::rotacionar_em_z(double angulo){
+	//retirado de http://www.j3d.org/matrix_faq/matrfaq_latest.html
 	double X,Y;
 	X = cos(angulo)*x - sin(angulo)*y;
 	Y = sin(angulo)*x + cos(angulo)*y;
 	x = X;
 	y = Y;	
 }
+
 
 Vetor::Vetor(double x0, double y0, double z0, double x1, double y1, double z1){
 	x = x1-x0;

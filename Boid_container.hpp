@@ -12,9 +12,9 @@ using namespace std;
 
 //constantes das forças atuantes nos boids
 #define K_COESAO 1.5
-#define K_REPULSAO 1.5
+#define K_REPULSAO 3
 #define K_ALINHAMENTO 7.0
-#define K_LIDERANCA 1
+#define K_LIDERANCA 4
 
 #define K_DIRECIONAMENTO 1
 #define INFLUENCIA_LIDER 14

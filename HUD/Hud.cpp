@@ -48,42 +48,44 @@ Hud::Hud(double w, double h){
 	height = h;
 }
 
-void Hud::resize(double w, double h){
-	width = w;
-	height = h;
-}
 
 void Hud::draw(){
-	glPushMatrix();
-		glLoadIdentity();
-		glViewport(0,0,width,height);
-		glOrtho(0,width,0,height,-1,1);
-		
-			for(int i=0;i<botoes.size();i++){
-				switch(botoes[i].status){
-					case BOTAO_SELECIONADO: glColor3ub(botoes[i].hover_r,botoes[i].hover_g,botoes[i].hover_b);
-					break;
-					case BOTAO_CLICADO: glColor3ub(botoes[i].click_r,botoes[i].click_g,botoes[i].click_b);
-					break;
-					
-					default: glColor3ub(botoes[i].default_r,botoes[i].default_g,botoes[i].default_b);
-				}
-				
-				if(botoes[i].status>BOTAO_TEXTO){
-					glBegin(GL_QUADS);
-						glVertex2i(botoes[i].x0/100.0*width, botoes[i].y0/100.0*height);
-						glVertex2i(botoes[i].x0/100.0*width, botoes[i].y0/100.0*height + botoes[i].y1);
-						glVertex2i(botoes[i].x0/100.0*width + botoes[i].x1, botoes[i].y0/100.0*height + botoes[i].y1);
-						glVertex2i(botoes[i].x0/100.0*width + botoes[i].x1, botoes[i].y0/100.0*height);
-					glEnd();
-				}
-				glColor3ub(0xff,0xff,0xff);
-				glRasterPos2i(botoes[i].x0/100.0*width, botoes[i].y0/100.0*height+2);
-				for(unsigned int j=0;botoes[i].texto[j]!=0;j++){
-					glutBitmapCharacter(GLUT_BITMAP_9_BY_15, botoes[i].texto[j]);
-				}
-			}
+	glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+			glLoadIdentity();
+			glViewport(0,0,width,height);
+			glOrtho(0,width,0,height,-1,1);
+	glMatrixMode(GL_MODELVIEW);
 	
+	glLoadIdentity();
+	
+	for(int i=0;i<botoes.size();i++){
+		switch(botoes[i].status){
+			case BOTAO_SELECIONADO: glColor3ub(botoes[i].hover_r,botoes[i].hover_g,botoes[i].hover_b);
+			break;
+			case BOTAO_CLICADO: glColor3ub(botoes[i].click_r,botoes[i].click_g,botoes[i].click_b);
+			break;
+			
+			default: glColor3ub(botoes[i].default_r,botoes[i].default_g,botoes[i].default_b);
+		}
+		
+		if(botoes[i].status>BOTAO_TEXTO){
+			glBegin(GL_QUADS);
+				glVertex2i(botoes[i].x0/100.0*width, botoes[i].y0/100.0*height);
+				glVertex2i(botoes[i].x0/100.0*width, botoes[i].y0/100.0*height + botoes[i].y1);
+				glVertex2i(botoes[i].x0/100.0*width + botoes[i].x1, botoes[i].y0/100.0*height + botoes[i].y1);
+				glVertex2i(botoes[i].x0/100.0*width + botoes[i].x1, botoes[i].y0/100.0*height);
+			glEnd();
+		}
+		glColor3ub(0xff,0xff,0xff);
+		glRasterPos2i(botoes[i].x0/100.0*width, botoes[i].y0/100.0*height+2);
+		for(unsigned int j=0;botoes[i].texto[j]!=0;j++){
+			glutBitmapCharacter(GLUT_BITMAP_9_BY_15, botoes[i].texto[j]);
+		}
+	}
+	
+	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
 	
 }

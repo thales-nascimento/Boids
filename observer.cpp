@@ -50,6 +50,8 @@ void keyboard_generico(unsigned char key){
 		break;
 		case '+': planeta->boid_container.add_boid_rand();
 		break;
+		case 'D': Boid::model = !Boid::model;
+		break;
 		case '-':{
 			planeta->boid_container.remove_boid_rand();
 			if(id_observado >= planeta->boid_container.get_n_boids()){
@@ -357,9 +359,9 @@ void observer_look(){
 		
 	//setando as strings do HUD
 	//os numeros são a quantidade de caracteres necessários definidos empiricamente
-	static char aux_xyz[3][12], aux_observado[19], aux_lider[12], aux_n_boids[11];
-	memset(aux_observado,0,19);
-	memset(aux_lider,0,12);
+	static char aux_xyz[3][12], aux_observado[21], aux_lider[17], aux_n_boids[11];
+	memset(aux_observado,0,21);
+	memset(aux_lider,0,17);
 	memset(aux_xyz,0,36);
 	memset(aux_n_boids,0,11);
 	
@@ -376,8 +378,6 @@ void observer_look(){
 	_hud->set_string(string_coordenadas, aux_xyz[0]);
 	_hud->set_string(string_coordenadas+1, aux_xyz[1]);
 	_hud->set_string(string_coordenadas+2, aux_xyz[2]);
-	
-	glutPostRedisplay();
 }
 
 

@@ -38,11 +38,10 @@ public:
 	Vetor get_aceleracao();
 	Vetor get_velocidade();	
 	
+	static GLuint boid;	//variavel que armazena o identificador da lista de vértices do boid simples (piramide)
+	static bool model;		//variavel que seleciona o modelo do boid
 	static void compile_vertexes();
 	void draw();
-	
-	void debug_velocity();
-	void debug_acceleration();
 	
 private:
 	Vetor coordenadas;
